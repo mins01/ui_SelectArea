@@ -129,7 +129,10 @@ var SelectArea = (function(){
     sa.bg=sa.querySelector('.selectArea-bg');
     sa.box.pointers=sa.querySelectorAll('.selectArea-pointer');
     sa.box.layout=sa.querySelector('.selectArea-layout');
+
+    /** @member {html_node} selectedArea 지정된 영역 노드 */
     sa.selectedArea = sa.box.layout;
+    
     sa.target = target
     sa.target.sa = sa;
     var p_bcr = sa.target.getBoundingClientRect();
@@ -141,6 +144,7 @@ var SelectArea = (function(){
     sa.x1 = sa.x+sa.w;
     sa.y1 = sa.y+sa.h;
     
+    /** @member {Boolean} outOfRange 대상을 벗어나서 설정 할 수 있는가? */
     sa.outOfRange = false;
     return sa;
   }
@@ -160,8 +164,8 @@ var SelectArea = (function(){
       this.target.sa = this;
     }
     /**
-    * UI 보이기
-    * 파라메터 지정 안 할 경우 대상(target)의 좌표를 사용한다.
+    * show 
+    * UI 보이기 파라메터 지정 안 할 경우 대상(target)의 좌표를 사용한다.
     * @param  {number} x  x좌표
     * @param  {number} y  y좌표
     * @param  {number} x1 x1좌표
@@ -305,7 +309,6 @@ var SelectArea = (function(){
     * @param  {number} y  
     * @param  {number} x1 
     * @param  {number} y1 
-    * @return {[type]}    
     */
     sa.syncPosCoordinateBy = function(x,y,x1,y1){
       var t = 0;
@@ -332,7 +335,6 @@ var SelectArea = (function(){
     /**
     * selectedArea 이동 후 좌표값 재계산용
     * @param  {Boolean} thisC 
-    * @return {[type]}        
     */
     sa.toDragable_onpointerup = function(thisC){
       return function(evt){
