@@ -226,14 +226,19 @@ var SelectArea = (function(){
     * @param  {number} x1
     * @param  {number} y1
     */
-    sa.syncPosCoordinate = function(x,y,x1,y1,onlyMove){
+    sa.syncPosCoordinate = function(x,y,x1,y1,fixedSize){
       var p_bcr = this.target.getBoundingClientRect();
       var r_bcr = this.rangeTarget.getBoundingClientRect();
       var gapX = p_bcr.x-r_bcr.x;
       var gapY = p_bcr.y-r_bcr.y;
+      // console.log(fixedSize);
+      if(fixedSize){
+          x1 = x+this.w;
+      }
       
-      _syncPosCoordinate(this,x+gapX,y+gapY,x1+gapX,y1+gapY);
-      // _syncPosCoordinate(this,x,y,x1,y1);
+      // console.log(x,y,x1,y1,this.w,this.h);
+      _syncPosCoordinate(this,x+gapX,y+gapY,x1+gapX,y1+gapY,fixedSize);
+      
       this.dispatchEvent((new CustomEvent("change", {}) ));
     }
     /**
@@ -259,7 +264,7 @@ var SelectArea = (function(){
     * @param  {number} w
     * @param  {number} h
     */
-    sa.moveAndSize = function(x,y,w,h){
+    sa.moveAndSize = function(x,y,w,h,fixedSize){
       // if(!this.outOfRange){
       //   var p_bcr = sa.target.getBoundingClientRect();
       //   var r_bcr = sa.rangeTarget.getBoundingClientRect();
@@ -277,7 +282,10 @@ var SelectArea = (function(){
       //   }
       // }
       // console.log(x,y,x+w,y+h);
-      this.syncPosCoordinate(x,y,x+w,y+h);
+      // if(x_max-x_min != this.w){
+      //   x_min = x_max-this.w;
+      // }
+      this.syncPosCoordinate(x,y,x+w,y+h,fixedSize);
     }
     /**
     * 상대적 좌표이동
@@ -304,7 +312,7 @@ var SelectArea = (function(){
       this.moveTo(this.x+x,this.y+y);
     }
     sa.moveTo = function(x,y){
-      this.moveAndSize(x,y,this.w,this.h);
+      this.moveAndSize(x,y,this.w,this.h,true);
     }
     /**
     * 상대적 크기 변경
@@ -425,10 +433,25 @@ var SelectArea = (function(){
   * @param  {number} x1 
   * @param  {number} y1 
   */
-  var _syncPosCoordinate = function(sa,x,y,x1,y1){
+  var _syncPosCoordinate = function(sa,x,y,x1,y1,fixedSize){
     // 여기의 x,y,x1,y1은 rangeTarget 기준이다.
     // console.log(x,y,x1,y1);
     var t ;
+    
+    // if(fixedSize){        console.log('x',x,x1,sa.w)
+    // 
+    //   if(Math.abs(x1-x) != sa.w){
+    //     x = sa._x
+    //     x1 = sa._x1
+    //   }
+    //   if(h != sa.h){
+    //     y_e = sa._y
+    //     y1_e = sa._y1
+    //     y_min = Math.min(y_e,y1_e)
+    //     y_max = Math.max(y_e,y1_e)
+    //   }
+    // }
+    
     var scrollX = (((t = document.documentElement) || (t = document.body.parentNode)) && typeof t.scrollLeft == 'number' ? t : document.body).scrollLeft;
     var scrollY = (((t = document.documentElement) || (t = document.body.parentNode))  && typeof t.scrollTop == 'number' ? t : document.body).scrollTop
     var p_bcr = sa.target.getBoundingClientRect();
@@ -456,11 +479,7 @@ var SelectArea = (function(){
       var x_max = Math.max(x_e,x1_e)
       var y_max = Math.max(y_e,y1_e)
     }
-    // x_min+=gap_x;
-    // x_max+=gap_x;
-    // y_min+=gap_y;
-    // y_max+=gap_y;
-    console.log(x_e,y_e,x1_e,y1_e);
+    // console.log(x_e,y_e,x1_e,y1_e);
     var w = Math.abs(x_max-x_min);
     var h = Math.abs(y_max-y_min);
     sa._x = x_e;
