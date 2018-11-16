@@ -177,9 +177,12 @@ var SelectArea = (function(){
     sa.show = function(x,y,x1,y1){
       document.body.appendChild(this);
       var p_bcr = this.target.getBoundingClientRect();
+      var r_bcr = this.rangeTarget.getBoundingClientRect();
+      var gapX = p_bcr.x-r_bcr.x;
+      var gapY = p_bcr.y-r_bcr.y;
       // console.log(p_bcr)
-      if(x == undefined) x = 0;
-      if(y == undefined) y = 0;
+      if(x == undefined) x = gapX;
+      if(y == undefined) y = gapY;
       if(x1 == undefined) x1 = p_bcr.width + x;
       if(y1 == undefined) y1 = p_bcr.height + y;
       var t = 0;
@@ -190,7 +193,6 @@ var SelectArea = (function(){
       this._x1 = x1;
       this._y1 = y1
       this.syncPosCoordinate(x,y,x1,y1);
-      
     }
     /**
     * UI숨기기
