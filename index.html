@@ -17,22 +17,22 @@
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
+
 	<!-- jquery 관련 -->
 	<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>   -->
-	
-	
+
+
 	<!-- 부트스트랩 4 : IE8지원안됨! -->
 	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">  -->
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>  -->
 	<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script> -->
 	<!-- vue.js -->
 	<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-	
+
 	<!-- meta og -->
-	
+
 	<meta property="og:title" content="SelectArea">
 	<meta property="og:description" content="SelectArea">
 	<meta name="og:image" content="http://www.mins01.com/img/logo.gif">
@@ -40,19 +40,24 @@
 	<meta property="og:image:height" content="70" />
 	<meta property="og:site_name" content="SelectArea" />
 	<meta property="og:type" content="document">
-	
+
 	<!-- //meta og -->
-	
+
 	<link rel="stylesheet" href="SelectArea.css" >
 	<script src="SelectArea.js"></script>
 	<script>
 	var sa0,sa1,sa2,sa3,sa4,sa5,sa6;
-	window.onload = function(){
-		sa0 = new SelectArea(document.querySelector("#test-box0"));
+	window.addEventListener('load',function(){
+		sa0 = SelectArea(document.querySelector("#test-box0"));
 		sa0.setRangeTarget(document.querySelector("#test-box-0"))
+		sa0.addEventListener('redraw',function(evt){
+			console.log("sa0",evt.type);
+		});
 		sa0.addEventListener('change',function(evt){ // 커스텀 이벤트
 			// console.log("sa0",evt.type,JSON.stringify(this.selectedArea.getBoundingClientRect()));
-			document.querySelector('#test-out0').value=JSON.stringify(this.selectedArea.getBoundingClientRect())
+
+			document.querySelector('#test-out0').value=JSON.stringify(this.getSelectedAreaRect())
+			document.querySelector('#test-out1').value=JSON.stringify(this.selectedArea.getBoundingClientRect())
 			var r = this.getSelectedAreaRect()
 			var f = document.form_sa0;
 			f.v2_x.value = f.v_x.value = r.x;
@@ -72,49 +77,50 @@
 		sa0.bg.addEventListener('click',function(evt){
 			console.log("sa0.bg",evt.type);
 		})
-		sa0.show(10,10,100,50);
+		// sa0.show(10,10,100,50);
+		sa0.showWithSize(10,10,100,50);
 		sa0.dispatchEvent((new CustomEvent("change", {}) ));
 
-		sa1 = new SelectArea(document.querySelector("#test-box1"));
+		sa1 = SelectArea(document.querySelector("#test-box1"));
 		sa1.selectedArea.innerHTML = '<img src="http://www.mins01.com/img/logo.gif" />'
 		sa1.show();
-		sa2 = new SelectArea(document.querySelector("#test-box2"));
+		sa2 = SelectArea(document.querySelector("#test-box2"));
 		sa2.selectedArea.innerHTML = '<span style="text-align:center;display:flex;justify-content: center;align-items: center;">test text</span>'
 		sa2.show();
-		sa3 = new SelectArea(document.querySelector("#test-box3"));
+		sa3 = SelectArea(document.querySelector("#test-box3"));
 		sa3.className = sa3.className +' selectArea-no-bg';
 		sa3.show(50,50,100,100);
-		sa4 = new SelectArea(document.querySelector("#test-box4"));
+		sa4 = SelectArea(document.querySelector("#test-box4"));
 		sa4.outOfRange=true;
 		sa4.show(50,50,100,100);
-		sa5 = new SelectArea(document.querySelector("#test-box5"));
+		sa5 = SelectArea(document.querySelector("#test-box5"));
 		sa5.selectedArea.innerHTML = '<span style="text-align:center;display:flex;justify-content: center;align-items: center;">Hello</span>'
 		sa5.show();
-		
-		sa7 = new SelectArea(document.querySelector("#test-box7"));
+
+		sa7 = SelectArea(document.querySelector("#test-box7"));
 		sa7.setRangeTarget(document.querySelector("#test-box8"))
 		sa7.outOfRange=false;
 		sa7.show();
-		
-		
-		sa9 = new SelectArea(document.querySelector("#test-box9"));
+
+
+		sa9 = SelectArea(document.querySelector("#test-box9"));
 		sa9.setRangeTarget(document.querySelector("#test-box10"))
 		sa9.outOfRange=true;
 		sa9.show();
-		
-		sa11 = new SelectArea(document.querySelector("#test-box10"));
+
+		sa11 = SelectArea(document.querySelector("#test-box10"));
 		sa11.setRangeTarget(document.querySelector("#test-box11"))
 		sa11.outOfRange=false;
 		sa11.selectedArea.innerHTML='<span>for test-box10, rangeTarget = text-box11</span>';
 		sa11.show(100,100,150,150);
-		
-	}
+
+	});
 	</script>
-	
+
 </head>
 <body>
 	<div class="container">
-		
+
 		<h1>SelectArea <button type="button" onclick="window.location.reload(true)">다시 읽기</button></h1>
 		<p>
 			영역 지정 UI
@@ -126,21 +132,23 @@
 			<ul>
 				<!-- <li>SelectArea.target : node. 영역 기준 대상</li> -->
 				<li>SelectArea.selectedArea : 선택된 영역을 나타내는 DIV. CSS .selectArea-layout 참고</li>
-				<li>SelectArea.outOfRange : 영역 기준 대상을 벗어날 수 있는지에 대한 설정(default:false)</li>				
+				<li>SelectArea.outOfRange : 영역 기준 대상을 벗어날 수 있는지에 대한 설정(default:false)</li>
 			</ul>
 			주요 멤버 변수
 			<ul>
-				<li>SelectArea.setTarget //위치 기준 대상</li>
-				<li>SelectArea.setRangeTarget //이동 위치 기준 대상</li>
-				<li>SelectArea.show</li>				
-				<li>SelectArea.hide</li>
-				<li>SelectArea.getSelectedAreaRect</li>
-				<li>SelectArea.moveAndSize</li>
-				<li>SelectArea.moveBy</li>
-				<li>SelectArea.sizeBy</li>
-				<li>SelectArea.resync</li>
-				<li>SelectArea.syncPosCoordinateBy</li>
-				<li>SelectArea.sizeBy</li>
+				<li>SelectArea(html_node) //위치 기준 대상,이동 위치 기준으로 설정하며 SelectArea UI를 준다.</li>
+				<li>SelectArea.setTarget(html_node) //위치 기준 대상</li>
+				<li>SelectArea.setRangeTarget(html_node) //이동 위치 기준 대상</li>
+				<li>SelectArea.show(x,y,x1,y1) //시작과 끝의 좌표로 보이기(미지정 시 최대치)</li>
+				<li>SelectArea.showWithSize(x,y,w,h) //시작과 크기로 보이기(미지정 시 최대치)</li>
+				<li>SelectArea.hide() //감추기</li>
+				<li>SelectArea.getSelectedAreaRect() //현재 선택된 영역의 정보(target에 상대적)</li>
+				<li>SelectArea.moveAndSize(x,y,w,h) //이동 및 너비 조정,(이동 위치에 따라 너비가 변경 될 수 있다)</li>
+				<li>SelectArea.moveBy(x,y,fixedSize) //x,y 좌표로 상대적 이동</li>
+				<li>SelectArea.sizeBy(w,h) //상대적 크기 조절</li>
+				<li>SelectArea.redraw() //현재의 정보로 다시 그린다. (기본적으로 메소드 호출후 자동으로 불린다.)</li>
+				<li>SelectArea.drawFromCoordinateBy(x,y,x1,y1) //시작과 끝좌표의 상대 값으로 다시 그린다.</li>
+
 			</ul>
 			CustomEvent
 			<ul>
@@ -155,10 +163,12 @@
 					test-box0
 				</div>
 			</div>
-			
+
 			<button type="button" onclick="sa0.show()">.show()</button>
 			<button type="button" onclick="sa0.show(30,30,10,10)">.show(30,30,10,10)</button>
 			<button type="button" onclick="sa0.show(30,30,1000,1000)">.show(30,30,1000,1000)</button>
+			<button type="button" onclick="sa0.show(100,100,100,100)">.show(100,100,100,100)</button>
+			<button type="button" onclick="sa0.showWithSize(100,100,100,100)">.showWithSize(100,100,100,100)</button>
 			<button type="button" onclick="sa0.hide()">.hide()</button><br />
 			<button type="button" onclick="sa0.destroy()">.destroy()</button><br />
 			<button type="button" onclick="sa0.moveBy(-1,0)" >.moveBy(-1,0)</button><button type="button" onclick="sa0.moveBy(1,0)" >.moveBy(1,0)</button>
@@ -166,30 +176,34 @@
 			<button type="button" onclick="sa0.sizeBy(-1,0)" >.sizeBy(-1,0)</button><button type="button" onclick="sa0.sizeBy(1,0)" >.sizeBy(1,0)</button>
 			<button type="button" onclick="sa0.sizeBy(0,-1)" >.sizeBy(0,-1)</button><button type="button" onclick="sa0.sizeBy(0,1)" >.sizeBy(0,1)</button>
 			<br />
-			sa0.moveTo(w,h) : 
-			x:<input name="v2_x" type="range" oninput="sa0.moveTo(parseInt(this.form.v2_x.value),parseInt(this.form.v2_y.value))" value="0" min="-300" max="300"  />/
-			y:<input name="v2_y" type="range" oninput="sa0.moveTo(parseInt(this.form.v2_x.value),parseInt(this.form.v2_y.value))" value="0"  min="-300" max="300"  />/
+			sa0.moveTo(w,h) :
+			x:<input name="v2_x" type="range" oninput="sa0.moveTo(parseFloat(this.form.v2_x.value),parseFloat(this.form.v2_y.value))" value="0" min="-500" max="500"  />/
+			y:<input name="v2_y" type="range" oninput="sa0.moveTo(parseFloat(this.form.v2_x.value),parseFloat(this.form.v2_y.value))" value="0"  min="-500" max="500"  />/
+
 			<br />
-			sa0.sizeTo(w,h) : w:<input name="v2_w" type="range" oninput="sa0.sizeTo(parseInt(this.form.v2_w.value),parseInt(this.form.v2_h.value))" value="50" min="0" max="300"  />/
-			h:<input name="v2_h" type="range" oninput="sa0.sizeTo(parseInt(this.form.v2_w.value),parseInt(this.form.v2_h.value))" value="50"  min="0" max="300"  />/
+			sa0.sizeTo(w,h) :
+			w:<input name="v2_w" type="range" oninput="sa0.sizeTo(parseFloat(this.form.v2_w.value),parseFloat(this.form.v2_h.value))" value="50" min="0" max="500"  />/
+			h:<input name="v2_h" type="range" oninput="sa0.sizeTo(parseFloat(this.form.v2_w.value),parseFloat(this.form.v2_h.value))" value="50"  min="0" max="500"  />/
 			<br />
 			<button type="button" onclick="sa0.outOfRange = true" >.outOfRange=true</button>
 			<button type="button" onclick="sa0.outOfRange = false" .>outOfRange=false</button>
-			
+
 			<br />
-			moveAndSize(x,y,w,h) : 
-			x:<input name="v_x" type="range" oninput="sa0.moveAndSize(parseInt(this.form.v_x.value),parseInt(this.form.v_y.value),parseInt(this.form.v_w.value),parseInt(this.form.v_h.value))" value="10" min="-300" max="300"  />/
-			y:<input name="v_y" type="range" oninput="sa0.moveAndSize(parseInt(this.form.v_x.value),parseInt(this.form.v_y.value),parseInt(this.form.v_w.value),parseInt(this.form.v_h.value))" value="10"  min="-300" max="300"  />/
-			
-			w:<input name="v_w" type="range" oninput="sa0.moveAndSize(parseInt(this.form.v_x.value),parseInt(this.form.v_y.value),parseInt(this.form.v_w.value),parseInt(this.form.v_h.value))" value="50" min="0" max="300"  />/
-			h:<input name="v_h" type="range" oninput="sa0.moveAndSize(parseInt(this.form.v_x.value),parseInt(this.form.v_y.value),parseInt(this.form.v_w.value),parseInt(this.form.v_h.value))" value="50"  min="0" max="300"  />/
+			moveAndSize(x,y,w,h) :
+			x:<input name="v_x" type="range" oninput="sa0.moveAndSize(parseFloat(this.form.v_x.value),parseFloat(this.form.v_y.value),parseFloat(this.form.v_w.value),parseFloat(this.form.v_h.value))" value="10" min="-500" max="500"  />/
+			y:<input name="v_y" type="range" oninput="sa0.moveAndSize(parseFloat(this.form.v_x.value),parseFloat(this.form.v_y.value),parseFloat(this.form.v_w.value),parseFloat(this.form.v_h.value))" value="10"  min="-500" max="500"  />/
+
+			w:<input name="v_w" type="range" oninput="sa0.moveAndSize(parseFloat(this.form.v_x.value),parseFloat(this.form.v_y.value),parseFloat(this.form.v_w.value),parseFloat(this.form.v_h.value))" value="50" min="0" max="500"  />/
+			h:<input name="v_h" type="range" oninput="sa0.moveAndSize(parseFloat(this.form.v_x.value),parseFloat(this.form.v_y.value),parseFloat(this.form.v_w.value),parseFloat(this.form.v_h.value))" value="50"  min="0" max="500"  />/
 			<br />
 			font-size:<input type="number" oninput="sa0.style.fontSize=this.value+'px'" value="10"  min="1" max="50"  />px
 			<br />
-			<button type="button" onclick="document.querySelector('#test-out0').value=JSON.stringify(sa0.getSelectedAreaRect())">결과</button>
+			<button type="button" onclick="document.querySelector('#test-out0').value=JSON.stringify(sa0.getSelectedAreaRect())">결과 .getSelectedAreaRect()</button>
 			<input type="text" id="test-out0" placeholder="결과" style="width:90%" />
+			<button type="button" onclick="document.querySelector('#test-out1').value=JSON.stringify(sa0.selectedArea.getBoundingClientRect())">결과 .getSelectedAreaRect()</button>
+			<input type="text" id="test-out1" placeholder="결과" style="width:90%" />
 		</form>
-		
+
 		<hr />
 		<h2>이미지 크기 조정</h2>
 		<button type="button" onclick="var img = sa1.selectedArea.querySelector('img'); sa1.moveAndSize(0,0,img.naturalWidth,img.naturalHeight)">이미지 기본크기로</button>
@@ -216,12 +230,12 @@
 		<div style="text-align:center">
 			<div style="display: inline-block;background-color:#cbb; width:300px; height:300px; margin: 0 auto" id="test-box5" >
 				test-box5<br />
-				<button type="button" onclick="sa5.setTarget(document.querySelector('#test-box5'));sa5.show()">여기에 보이기</button>
+				<button type="button" onclick="sa5.setTarget(document.querySelector('#test-box5'));sa5.setRangeTarget(document.querySelector('#test-box5'));sa5.show()">여기에 보이기</button>
 			</div>
 			<div style="display: inline-block;background-color:#bbc; width:300px; height:300px; margin: 0 auto" id="test-box6" >
 				test-box6<br />
-				<button type="button" onclick="sa5.setTarget(document.querySelector('#test-box6'));sa5.show()">여기에 보이기</button>				
-			</div>	
+				<button type="button" onclick="sa5.setTarget(document.querySelector('#test-box6'));sa5.setRangeTarget(document.querySelector('#test-box6'));sa5.show()">여기에 보이기</button>
+			</div>
 		</div>
 		<h2>.setRangeTarget()</h2>
 		<div style="text-align:center">
@@ -241,7 +255,7 @@
 				test-box11, .outOfRange=false<br />
 			</div>
 		</div>
-		
+
 	</div>
 </body>
 </html>
