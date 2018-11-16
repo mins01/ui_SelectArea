@@ -247,11 +247,16 @@ var SelectArea = (function(){
         y = Math.max(Math.min(p_bcr.height,y),0)
         w = Math.max(Math.min(p_bcr.width,w),0)
         h = Math.max(Math.min(p_bcr.height,h),0)
+        // if(x+w>p_bcr.width){
+        //   x = p_bcr.width-w
+        // }
         if(x+w>p_bcr.width){
-          x = p_bcr.width-w
+          x = this.x;
+          w = p_bcr.width-x;
         }
         if(y+h>p_bcr.height){
-          y = p_bcr.height-h
+          y = this.y;
+          h = p_bcr.width-y;
         }
       }
       // console.log(x,y,x+w,y+h);
