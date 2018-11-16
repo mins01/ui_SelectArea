@@ -129,20 +129,19 @@ var SelectArea = (function(){
     sa.bg=sa.querySelector('.selectArea-bg');
     sa.box.pointers=sa.querySelectorAll('.selectArea-pointer');
     sa.box.layout=sa.querySelector('.selectArea-layout');
-
-    /** @member {html_node} selectedArea 지정된 영역 노드 */
     sa.selectedArea = sa.box.layout;
     
     sa.target = target
     sa.target.sa = sa;
+    sa.rangeTarget = sa.target;
     var p_bcr = sa.target.getBoundingClientRect();
     
-    sa.x = 0;
-    sa.y = 0;
+    sa._x = 0;
+    sa._y = 0;
     sa.w = p_bcr.width;
     sa.h = p_bcr.height;
-    sa.x1 = sa.x+sa.w;
-    sa.y1 = sa.y+sa.h;
+    sa._x1 = sa._x+sa.w;
+    sa._y1 = sa._y+sa.h;
     
     /** @member {Boolean} outOfRange 대상을 벗어나서 설정 할 수 있는가? */
     sa.outOfRange = false;
@@ -163,6 +162,10 @@ var SelectArea = (function(){
       this.target = target;
       this.target.sa = this;
     }
+    sa.setRangeTarget = function(rangeTarget){
+      this.hide();
+      this.rangeTarget = rangeTarget;
+    }
     /**
     * show 
     * UI 보이기 파라메터 지정 안 할 경우 대상(target)의 좌표를 사용한다.
@@ -182,10 +185,10 @@ var SelectArea = (function(){
       var t = 0;
       if(x > x1){t = x;x = x1;x1 = t;}
       if(y > y1){t = y;y = y1;y1 = t;}
-      this.x = x;
-      this.y = y;
-      this.x1 = x1;
-      this.y1 = y1
+      this._x = x;
+      this._y = y;
+      this._x1 = x1;
+      this._y1 = y1
       this.syncPosCoordinate(x,y,x1,y1);
       
     }
@@ -223,8 +226,8 @@ var SelectArea = (function(){
     * @return {DOMRect}
     */
     sa.getSelectedAreaRect=function(){
-      var x = Math.min(this.x,this.x1);
-      var y = Math.min(this.y,this.y1);
+      var x = Math.min(this._x,this._x1);
+      var y = Math.min(this._y,this._y1);
       if(DOMRect){
         return new DOMRect(x,y,this.w,this.h);
       }else{
@@ -243,20 +246,18 @@ var SelectArea = (function(){
     sa.moveAndSize = function(x,y,w,h){
       if(!this.outOfRange){
         var p_bcr = sa.target.getBoundingClientRect();
-        x = Math.max(Math.min(p_bcr.width,x),0)
-        y = Math.max(Math.min(p_bcr.height,y),0)
-        w = Math.max(Math.min(p_bcr.width,w),0)
-        h = Math.max(Math.min(p_bcr.height,h),0)
-        // if(x+w>p_bcr.width){
-        //   x = p_bcr.width-w
-        // }
-        if(x+w>p_bcr.width){
-          x = this.x;
-          w = p_bcr.width-x;
+        var r_bcr = sa.rangeTarget.getBoundingClientRect();
+        x = Math.max(Math.min(r_bcr.width,x),0)
+        y = Math.max(Math.min(r_bcr.height,y),0)
+        w = Math.max(Math.min(r_bcr.width,w),0)
+        h = Math.max(Math.min(r_bcr.height,h),0)
+        if(x+w>r_bcr.width){
+          x = this._x;
+          w = r_bcr.width-x;
         }
-        if(y+h>p_bcr.height){
-          y = this.y;
-          h = p_bcr.width-y;
+        if(y+h>r_bcr.height){
+          y = this._y;
+          h = r_bcr.width-y;
         }
       }
       // console.log(x,y,x+w,y+h);
@@ -270,21 +271,21 @@ var SelectArea = (function(){
     sa.moveBy = function(x,y){
       // if(!this.outOfRange){
       //   var p_bcr = sa.target.getBoundingClientRect();
-      //   if(this.x+x>p_bcr.width){
-      //     x = p_bcr.width-this.x;
+      //   if(this._x+x>p_bcr.width){
+      //     x = p_bcr.width-this._x;
       //   }
-      //   if(this.x+x<0){
-      //     x = -1*this.x;
+      //   if(this._x+x<0){
+      //     x = -1*this._x;
       //   }
-      //   if(this.y+y>p_bcr.width){
-      //     y = p_bcr.width-this.y;
+      //   if(this._y+y>p_bcr.width){
+      //     y = p_bcr.width-this._y;
       //   }
-      //   if(this.y+y<0){
-      //     y = -1*this.y;
+      //   if(this._y+y<0){
+      //     y = -1*this._y;
       //   }
       // }
-      // console.log(x,y,this.x+x,this.y+y,this.w,this.h)
-      this.moveTo(this.x+x,this.y+y);
+      // console.log(x,y,this._x+x,this._y+y,this.w,this.h)
+      this.moveTo(this._x+x,this._y+y);
     }
     sa.moveTo = function(x,y){
       this.moveAndSize(x,y,this.w,this.h);
@@ -303,15 +304,15 @@ var SelectArea = (function(){
      * @param  {number} h
      */
     sa.sizeTo = function(w,h){
-      // console.log(x,y,this.x+x,this.y+y,this.w,this.h)
-      this.moveAndSize(this.x,this.y,w,h);
+      // console.log(x,y,this._x+x,this._y+y,this.w,this.h)
+      this.moveAndSize(this._x,this._y,w,h);
     }
     /**
     * 화면 다시 그리기
     * onresize 를 위해서 만듬
     */
     sa.resync = function(){
-      this.syncPosCoordinate(this.x,this.y,this.x1,this.y1);
+      this.syncPosCoordinate(this._x,this._y,this._x1,this._y1);
     }
     /**
     * 상재적 좌표로 설정
@@ -324,10 +325,10 @@ var SelectArea = (function(){
       var t = 0;
       // var p_bcr = sa.target.getBoundingClientRect();
       
-      var x_e = this.x+x;
-      var y_e = this.y+y;
-      var x1_e = this.x1+x1;
-      var y1_e = this.y1+y1;
+      var x_e = this._x+x;
+      var y_e = this._y+y;
+      var x1_e = this._x1+x1;
+      var y1_e = this._y1+y1;
       var w = x1_e-x_e;
       var h = y1_e-y_e;
       // console.log(x,y,w,h,x1,y1)
@@ -349,9 +350,9 @@ var SelectArea = (function(){
     sa.toDragable_onpointerup = function(thisC){
       return function(evt){
         var t = 0;
-        if(thisC.x > thisC.x1){t = thisC.x;thisC.x = thisC.x1;thisC.x1 = t;}
-        if(thisC.y > thisC.y1){t = thisC.y;thisC.y = thisC.y1;thisC.y1 = t;}
-        thisC.syncPosCoordinate(thisC.x,thisC.y,thisC.x1,thisC.y1);
+        if(thisC._x > thisC._x1){t = thisC._x;thisC._x = thisC._x1;thisC._x1 = t;}
+        if(thisC._y > thisC._y1){t = thisC._y;thisC._y = thisC._y1;thisC._y1 = t;}
+        thisC.syncPosCoordinate(thisC._x,thisC._y,thisC._x1,thisC._y1);
       }
     }(sa)
     
@@ -413,16 +414,18 @@ var SelectArea = (function(){
     var scrollX = (((t = document.documentElement) || (t = document.body.parentNode)) && typeof t.scrollLeft == 'number' ? t : document.body).scrollLeft;
     var scrollY = (((t = document.documentElement) || (t = document.body.parentNode))  && typeof t.scrollTop == 'number' ? t : document.body).scrollTop
     var p_bcr = sa.target.getBoundingClientRect();
-    
+    var r_bcr = sa.rangeTarget.getBoundingClientRect();
+    var gapX = p_bcr.x-r_bcr.x;
+    var gapY = p_bcr.y-r_bcr.y;
     if(!sa.outOfRange){  
       var x_e = Math.max(x,0);
-      var x1_e = Math.min(x1,p_bcr.width);
+      var x1_e = Math.min(x1,r_bcr.width);
       var y_e = Math.max(y,0);
-      var y1_e = Math.min(y1,p_bcr.height);
+      var y1_e = Math.min(y1,r_bcr.height);
       var x_min = Math.max(Math.min(x_e,x1_e),0);
       var y_min = Math.max(Math.min(y_e,y1_e),0);
-      var x_max = Math.min(Math.max(x_e,x1_e),p_bcr.width);
-      var y_max = Math.min(Math.max(y_e,y1_e),p_bcr.height);
+      var x_max = Math.min(Math.max(x_e,x1_e),r_bcr.width);
+      var y_max = Math.min(Math.max(y_e,y1_e),r_bcr.height);
       
       
     }else{
@@ -435,33 +438,40 @@ var SelectArea = (function(){
       var x_max = Math.max(x_e,x1_e)
       var y_max = Math.max(y_e,y1_e)
     }
+    // x_min+=gap_x;
+    // x_max+=gap_x;
+    // y_min+=gap_y;
+    // y_max+=gap_y;
     
     var w = Math.abs(x_max-x_min);
     var h = Math.abs(y_max-y_min);
-    sa.x = x_e;
-    sa.y = y_e;
+    sa._x = x_e;
+    sa._y = y_e;
     sa.w = w;
     sa.h = h;
-    sa.x1 = x1_e;
-    sa.y1 = y1_e;
+    sa._x1 = x1_e;
+    sa._y1 = y1_e
+    sa.x = x_min-gapX;
+    sa.y = y_min-gapY;
     
-    sa.box.pointers[0].setAttribute('data-x',x_min.toFixed(0));
-    sa.box.pointers[0].setAttribute('data-y',y_min.toFixed(0));
+    
+    sa.box.pointers[0].setAttribute('data-x',sa.x.toFixed(0));
+    sa.box.pointers[0].setAttribute('data-y',sa.y.toFixed(0));
     sa.box.pointers[4].setAttribute('data-w',w.toFixed(0));
     sa.box.pointers[4].setAttribute('data-h',h.toFixed(0));
     
-    sa.box.style.top = y_min+"px";
     sa.box.style.left = x_min+"px";
+    sa.box.style.top = y_min+"px";
     sa.box.style.width = w+"px";
     sa.box.style.height = h+"px";
-    sa.style.top = p_bcr.top+scrollY+"px";
-    sa.style.left = p_bcr.left+scrollX+"px";
-    sa.style.width = p_bcr.width+"px";
-    sa.style.height = p_bcr.height+"px";
-    sa.bg.style.borderTopWidth = Math.max(0,Math.min(p_bcr.height,y_min))+"px";
-    sa.bg.style.borderLeftWidth = Math.max(0,Math.min(p_bcr.width,x_min))+"px";
-    sa.bg.style.borderRightWidth = Math.max(0,Math.min(p_bcr.width,(p_bcr.width-x_min-w)))+"px";
-    sa.bg.style.borderBottomWidth =  Math.max(0,Math.min(p_bcr.height,(p_bcr.height-y_min-h)))+"px";
+    sa.style.top = r_bcr.top+scrollY+"px";
+    sa.style.left = r_bcr.left+scrollX+"px";
+    sa.style.width = r_bcr.width+"px";
+    sa.style.height = r_bcr.height+"px";
+    sa.bg.style.borderTopWidth = Math.max(0,Math.min(r_bcr.height,y_min))+"px";
+    sa.bg.style.borderLeftWidth = Math.max(0,Math.min(r_bcr.width,x_min))+"px";
+    sa.bg.style.borderRightWidth = Math.max(0,Math.min(r_bcr.width,(r_bcr.width-x_min-w)))+"px";
+    sa.bg.style.borderBottomWidth =  Math.max(0,Math.min(r_bcr.height,(r_bcr.height-y_min-h)))+"px";
   }
   
   return function(target){

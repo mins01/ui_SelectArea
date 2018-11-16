@@ -89,6 +89,24 @@
 		sa5 = new SelectArea(document.querySelector("#test-box5"));
 		sa5.selectedArea.innerHTML = '<span style="text-align:center;display:flex;justify-content: center;align-items: center;">Hello</span>'
 		sa5.show();
+		
+		sa7 = new SelectArea(document.querySelector("#test-box7"));
+		sa7.setRangeTarget(document.querySelector("#test-box8"))
+		sa7.outOfRange=false;
+		sa7.show();
+		
+		
+		sa9 = new SelectArea(document.querySelector("#test-box9"));
+		sa9.setRangeTarget(document.querySelector("#test-box10"))
+		sa9.outOfRange=true;
+		sa9.show();
+		
+		sa11 = new SelectArea(document.querySelector("#test-box10"));
+		sa11.setRangeTarget(document.querySelector("#test-box11"))
+		sa11.outOfRange=false;
+		sa11.selectedArea.innerHTML='<span>for test-box10, rangeTarget = text-box11</span>';
+		sa11.show(100,100,150,150);
+		
 	}
 	</script>
 	
@@ -111,7 +129,8 @@
 			</ul>
 			주요 멤버 변수
 			<ul>
-				<li>SelectArea.setTarget</li>
+				<li>SelectArea.setTarget //위치 기준 대상</li>
+				<li>SelectArea.setRangeTarget //이동 위치 기준 대상</li>
 				<li>SelectArea.show</li>				
 				<li>SelectArea.hide</li>
 				<li>SelectArea.getSelectedAreaRect</li>
@@ -188,7 +207,7 @@
 			test-box4
 		</div>
 		<hr />
-		<h2>setTarget</h2>
+		<h2>.setTarget()</h2>
 		<div style="text-align:center">
 			<div style="display: inline-block;background-color:#cbb; width:300px; height:300px; margin: 0 auto" id="test-box5" >
 				test-box5<br />
@@ -198,6 +217,24 @@
 				test-box6<br />
 				<button type="button" onclick="sa5.setTarget(document.querySelector('#test-box6'));sa5.show()">여기에 보이기</button>				
 			</div>	
+		</div>
+		<h2>.setRangeTarget()</h2>
+		<div style="text-align:center">
+			<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto;overflow:hidden" id="test-box8" >
+				test-box8, .outOfRange=false<br />
+				<div style="background-color:#cbb; width:200px; height:200px; margin: 0 auto" id="test-box7" >
+					test-box7<br />
+				</div>
+			</div>
+			<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto;overflow:hidden" id="test-box10" >
+				test-box10, .outOfRange=true<br />
+				<div style="background-color:#cbb; width:200px; height:200px; margin: 0 auto" id="test-box9" >
+					test-box9<br />
+				</div>
+			</div>
+			<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto;overflow:hidden" id="test-box11" >
+				test-box11, .outOfRange=false<br />
+			</div>
 		</div>
 		
 	</div>
