@@ -108,11 +108,29 @@
 		sa9.outOfRange=true;
 		sa9.show();
 
+
 		sa11 = SelectArea(document.querySelector("#test-box10"));
 		sa11.setRangeTarget(document.querySelector("#test-box11"))
 		sa11.outOfRange=false;
 		sa11.selectedArea.innerHTML='<span>for test-box10, rangeTarget = text-box11</span>';
 		sa11.show(100,100,150,150);
+		sa11.sizeTo(100,100);
+
+		sa12 = SelectArea(document.querySelector("#test-box12"));
+		sa12.className = sa12.className +' selectArea-pointer-lg';
+		sa12.show(50,50,100,100);
+		sa13 = SelectArea(document.querySelector("#test-box13"));
+		sa13.className = sa13.className +' selectArea-pointer-md';
+		sa13.show(50,50,100,100);
+		sa14 = SelectArea(document.querySelector("#test-box14"));
+		sa14.className = sa14.className +' selectArea-pointer-sm';
+		sa14.show(50,50,100,100);
+		sa15 = SelectArea(document.querySelector("#test-box15"));
+		sa15.className = sa15.className +' selectArea-pointer-xs';
+		sa15.show(50,50,100,100);
+
+		sa16 = SelectArea(document.querySelector("#test-box16"));
+		sa16.show(50,50,100,100);
 
 	});
 	</script>
@@ -255,7 +273,24 @@
 				test-box11, .outOfRange=false<br />
 			</div>
 		</div>
-
+		<h2>css : selectArea-pointer-lg , selectArea-pointer-md , selectArea-pointer-sm , selectArea-pointer-xs</h2>
+		<div style="text-align:center">
+			<div style="display: inline-block;background-color:#cbb; width:200px; height:200px; margin: 0 auto" id="test-box12" >
+				test-box12<br />selectArea-pointer-lg
+			</div>
+			<div style="display: inline-block;background-color:#abb; width:200px; height:200px; margin: 0 auto" id="test-box13" >
+				test-box13<br />selectArea-pointer-md
+			</div>
+			<div style="display: inline-block;background-color:#ccb; width:200px; height:200px; margin: 0 auto" id="test-box14" >
+				test-box14<br />selectArea-pointer-sm
+			</div>
+			<div style="display: inline-block;background-color:#cbc; width:200px; height:200px; margin: 0 auto" id="test-box15" >
+				test-box15<br />selectArea-pointer-xs
+			</div>
+			<div style="display: inline-block;background-color:#abc; width:200px; height:200px; margin: 0 auto" id="test-box16" >
+				test-box16<br />default = 1em
+			</div>
+		</div>
 	</div>
 </body>
 </html>

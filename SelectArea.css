@@ -69,6 +69,19 @@
 	width:1em;height:1em;
 	border:1px solid rgba(0,0,0,0.5);
 	background-color: #fff;
+	margin: 0;padding: 0;
+}
+.selectArea-pointer-lg .selectArea-pointer{
+	font-size: 20px;
+}
+.selectArea-pointer-md .selectArea-pointer{
+	font-size: 14px;
+}
+.selectArea-pointer-sm .selectArea-pointer{
+	font-size: 12px;
+}
+.selectArea-pointer-xs .selectArea-pointer{
+	font-size: 8px;
 }
 .selectArea-pointer:hover{
 	background-color: #ccc;
@@ -104,7 +117,7 @@
 	white-space: nowrap;;
 }
 .selectArea-pointer[data-index="0"]{
-	top:-0.5em;left:-0.5em;cursor: nw-resize;	
+	top:-0.5em;left:-0.5em;cursor: nw-resize;
 	z-index: 25;
 }
 .selectArea-pointer[data-index="1"]{
