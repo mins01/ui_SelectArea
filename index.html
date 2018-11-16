@@ -54,10 +54,10 @@
 			document.querySelector('#test-out0').value=JSON.stringify(this.selectedArea.getBoundingClientRect())
 			var r = this.getSelectedAreaRect()
 			var f = document.form_sa0;
-			f.v_x.value = r.x;
-			f.v_y.value = r.y;
-			f.v_w.value = r.width;
-			f.v_h.value = r.height;
+			f.v2_x.value = f.v_x.value = r.x;
+			f.v2_y.value = f.v_y.value = r.y;
+			f.v2_w.value = f.v_w.value = r.width;
+			f.v2_h.value = f.v_h.value = r.height;
 		})
 		sa0.addEventListener('click',function(evt){
 			console.log("sa0",evt.type);
@@ -132,20 +132,28 @@
 			<div style="background-color:#abc; width:200px; height:200px; margin: 0 auto" id="test-box0" >
 				test-box0
 			</div>
-			<button type="button" onclick="sa0.show()">영역지정 보이기(기본 전체 크기)</button>
-			<button type="button" onclick="sa0.show(30,30,10,10)">영역지정 보이기(위치, 크기 지정)</button>
-			<button type="button" onclick="sa0.show(30,30,1000,1000)">영역지정 보이기(위치, 크기 지정(아주크게))</button>
-			<button type="button" onclick="sa0.hide()">영역지정 숨기기</button><br />
-			<button type="button" onclick="sa0.destroy()">영역지정 제거</button><br />
-			<button type="button" onclick="sa0.moveBy(-1,0)" >x-=1</button><button type="button" onclick="sa0.moveBy(1,0)" >x+=1</button>
-			<button type="button" onclick="sa0.moveBy(0,-1)" >y-=1</button><button type="button" onclick="sa0.moveBy(0,1)" >y+=1</button>
-			<button type="button" onclick="sa0.sizeBy(-1,0)" >w-=1</button><button type="button" onclick="sa0.sizeBy(1,0)" >w+=1</button>
-			<button type="button" onclick="sa0.sizeBy(0,-1)" >h-=1</button><button type="button" onclick="sa0.sizeBy(0,1)" >h+=1</button>
+			<button type="button" onclick="sa0.show()">.show()</button>
+			<button type="button" onclick="sa0.show(30,30,10,10)">.show(30,30,10,10)</button>
+			<button type="button" onclick="sa0.show(30,30,1000,1000)">.show(30,30,1000,1000)</button>
+			<button type="button" onclick="sa0.hide()">.hide()</button><br />
+			<button type="button" onclick="sa0.destroy()">.destroy()</button><br />
+			<button type="button" onclick="sa0.moveBy(-1,0)" >.moveBy(-1,0)</button><button type="button" onclick="sa0.moveBy(1,0)" >.moveBy(1,0)</button>
+			<button type="button" onclick="sa0.moveBy(0,-1)" >.moveBy(0,-1</button><button type="button" onclick="sa0.moveBy(0,1)" >.moveBy(0,1)</button>
+			<button type="button" onclick="sa0.sizeBy(-1,0)" >.sizeBy(-1,0)</button><button type="button" onclick="sa0.sizeBy(1,0)" >.sizeBy(1,0)</button>
+			<button type="button" onclick="sa0.sizeBy(0,-1)" >.sizeBy(0,-1)</button><button type="button" onclick="sa0.sizeBy(0,1)" >.sizeBy(0,1)</button>
 			<br />
-			<button type="button" onclick="sa0.outOfRange = true" >outOfRange=true</button>
-			<button type="button" onclick="sa0.outOfRange = false" >outOfRange=false</button>
+			sa0.moveTo(w,h) : 
+			x:<input name="v2_x" type="range" oninput="sa0.moveTo(parseInt(this.form.v2_x.value),parseInt(this.form.v2_y.value))" value="0" min="-300" max="300"  />/
+			y:<input name="v2_y" type="range" oninput="sa0.moveTo(parseInt(this.form.v2_x.value),parseInt(this.form.v2_y.value))" value="0"  min="-300" max="300"  />/
+			<br />
+			sa0.sizeTo(w,h) : w:<input name="v2_w" type="range" oninput="sa0.sizeTo(parseInt(this.form.v2_w.value),parseInt(this.form.v2_h.value))" value="50" min="0" max="300"  />/
+			h:<input name="v2_h" type="range" oninput="sa0.sizeTo(parseInt(this.form.v2_w.value),parseInt(this.form.v2_h.value))" value="50"  min="0" max="300"  />/
+			<br />
+			<button type="button" onclick="sa0.outOfRange = true" >.outOfRange=true</button>
+			<button type="button" onclick="sa0.outOfRange = false" .>outOfRange=false</button>
 			
 			<br />
+			moveAndSize(x,y,w,h) : 
 			x:<input name="v_x" type="range" oninput="sa0.moveAndSize(parseInt(this.form.v_x.value),parseInt(this.form.v_y.value),parseInt(this.form.v_w.value),parseInt(this.form.v_h.value))" value="10" min="-300" max="300"  />/
 			y:<input name="v_y" type="range" oninput="sa0.moveAndSize(parseInt(this.form.v_x.value),parseInt(this.form.v_y.value),parseInt(this.form.v_w.value),parseInt(this.form.v_h.value))" value="10"  min="-300" max="300"  />/
 			

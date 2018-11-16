@@ -263,23 +263,26 @@ var SelectArea = (function(){
     * @param  {number} y 
     */
     sa.moveBy = function(x,y){
-      if(!this.outOfRange){
-        var p_bcr = sa.target.getBoundingClientRect();
-        if(this.x+x>p_bcr.width){
-          x = p_bcr.width-this.x;
-        }
-        if(this.x+x<0){
-          x = -1*this.x;
-        }
-        if(this.y+y>p_bcr.width){
-          y = p_bcr.width-this.y;
-        }
-        if(this.y+y<0){
-          y = -1*this.y;
-        }
-      }
+      // if(!this.outOfRange){
+      //   var p_bcr = sa.target.getBoundingClientRect();
+      //   if(this.x+x>p_bcr.width){
+      //     x = p_bcr.width-this.x;
+      //   }
+      //   if(this.x+x<0){
+      //     x = -1*this.x;
+      //   }
+      //   if(this.y+y>p_bcr.width){
+      //     y = p_bcr.width-this.y;
+      //   }
+      //   if(this.y+y<0){
+      //     y = -1*this.y;
+      //   }
+      // }
       // console.log(x,y,this.x+x,this.y+y,this.w,this.h)
-      this.moveAndSize(this.x+x,this.y+y,this.w,this.h);
+      this.moveTo(this.x+x,this.y+y);
+    }
+    sa.moveTo = function(x,y){
+      this.moveAndSize(x,y,this.w,this.h);
     }
     /**
     * 상대적 크기 변경
@@ -287,14 +290,16 @@ var SelectArea = (function(){
     * @param  {number} h 
     */
     sa.sizeBy = function(w,h){
-      if(!this.outOfRange){
-        var p_bcr = sa.target.getBoundingClientRect();
-        if(this.x+w>p_bcr.width){
-          w = p_bcr.width-this.x;
-        }
-      }
+      this.sizeTo(this.w+w,this.h+h);
+    }
+    /**
+     * 절대 크기 변경
+     * @param  {number} w
+     * @param  {number} h
+     */
+    sa.sizeTo = function(w,h){
       // console.log(x,y,this.x+x,this.y+y,this.w,this.h)
-      this.moveAndSize(this.x,this.y,this.w+w,this.h+h);
+      this.moveAndSize(this.x,this.y,w,h);
     }
     /**
     * 화면 다시 그리기
