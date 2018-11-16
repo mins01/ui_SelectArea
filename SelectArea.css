@@ -115,6 +115,7 @@
 }
 .selectArea-pointer[data-index="3"]{
 	top:calc(50% - 0.5em);right:-0.5em;cursor: e-resize;
+	z-index: 23;
 }
 .selectArea-pointer[data-index="4"]{
 	bottom:-0.5em;right:-0.5em;cursor: nw-resize;
