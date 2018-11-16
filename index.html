@@ -157,7 +157,8 @@
 				<li>SelectArea(html_node) //위치 기준 대상,이동 위치 기준으로 설정하며 SelectArea UI를 준다.</li>
 				<li>SelectArea.setTarget(html_node) //위치 기준 대상</li>
 				<li>SelectArea.setRangeTarget(html_node) //이동 위치 기준 대상</li>
-				<li>SelectArea.show(x,y,x1,y1) //시작과 끝의 좌표로 보이기(미지정 시 최대치)</li>
+				<li>SelectArea.show(x,y,x1,y1) //시작과 끝의 좌표로 보이기(값이 없으면 이전 정보 사용)</li>
+				<li>SelectArea.showFullsize() //타겟의 크기에 맞춰서 보이기</li>
 				<li>SelectArea.showWithSize(x,y,w,h) //시작과 크기로 보이기(미지정 시 최대치)</li>
 				<li>SelectArea.hide() //감추기</li>
 				<li>SelectArea.getSelectedAreaRect() //현재 선택된 영역의 정보(target에 상대적)</li>
@@ -183,6 +184,8 @@
 			</div>
 
 			<button type="button" onclick="sa0.show()">.show()</button>
+			<button type="button" onclick="sa0.showFullsize()">.showFullsize()</button>
+
 			<button type="button" onclick="sa0.show(30,30,10,10)">.show(30,30,10,10)</button>
 			<button type="button" onclick="sa0.show(30,30,1000,1000)">.show(30,30,1000,1000)</button>
 			<button type="button" onclick="sa0.show(100,100,100,100)">.show(100,100,100,100)</button>
@@ -216,10 +219,10 @@
 			<br />
 			font-size:<input type="number" oninput="sa0.style.fontSize=this.value+'px'" value="10"  min="1" max="50"  />px
 			<br />
-			<button type="button" onclick="document.querySelector('#test-out0').value=JSON.stringify(sa0.getSelectedAreaRect())">결과 .getSelectedAreaRect()</button>
-			<input type="text" id="test-out0" placeholder="결과" style="width:90%" />
-			<button type="button" onclick="document.querySelector('#test-out1').value=JSON.stringify(sa0.selectedArea.getBoundingClientRect())">결과 .getSelectedAreaRect()</button>
-			<input type="text" id="test-out1" placeholder="결과" style="width:90%" />
+			<button type="button" onclick="document.querySelector('#test-out0').value=JSON.stringify(sa0.getSelectedAreaRect())">결과 .getSelectedAreaRect()</button><br />
+			<input type="text" id="test-out0" placeholder="결과" style="width:98%" />
+			<button type="button" onclick="document.querySelector('#test-out1').value=JSON.stringify(sa0.selectedArea.getBoundingClientRect())">결과 .selectedArea.getBoundingClientRect()</button><br />
+			<input type="text" id="test-out1" placeholder="결과" style="width:98%" />
 		</form>
 
 		<hr />

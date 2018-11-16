@@ -199,26 +199,26 @@ var SelectArea = (function(){
     */
     sa.show = function(x,y,x1,y1){
       document.body.appendChild(this);
-      var p_bcr = this.target.getBoundingClientRect();
-      var r_bcr = this.rangeTarget.getBoundingClientRect();
-      var gapX = p_bcr.x-r_bcr.x;
-      var gapY = p_bcr.y-r_bcr.y;
+      // var p_bcr = this.target.getBoundingClientRect();
+      // var r_bcr = this.rangeTarget.getBoundingClientRect();
+      // var gapX = p_bcr.x-r_bcr.x;
+      // var gapY = p_bcr.y-r_bcr.y;
       // console.log(p_bcr)
-      if(x == undefined) x = 0;
-      if(y == undefined) y = 0;
-      if(x1 == undefined) x1 = p_bcr.width + x;
-      if(y1 == undefined) y1 = p_bcr.height + y;
-      var t = 0;
-      if(x > x1){t = x;x = x1;x1 = t;}
-      if(y > y1){t = y;y = y1;y1 = t;}
-      this.tx = x;
-      this.ty = y;
-      this.tx1 = x1;
-      this.ty1 = y1;
-      this.rx = x+gapX;
-      this.ry = y+gapY;
-      this.rx1 = x1+gapX;
-      this.ry1 = y1+gapY;
+      if(x == undefined) x = this.tx;
+      if(y == undefined) y = this.ty;
+      if(x1 == undefined) x1 = this.tx1;
+      if(y1 == undefined) y1 = this.ty1;
+      // var t = 0;
+      // if(x > x1){t = x;x = x1;x1 = t;}
+      // if(y > y1){t = y;y = y1;y1 = t;}
+      // this.tx = x;
+      // this.ty = y;
+      // this.tx1 = x1;
+      // this.ty1 = y1;
+      // this.rx = x+gapX;
+      // this.ry = y+gapY;
+      // this.rx1 = x1+gapX;
+      // this.ry1 = y1+gapY;
       this.drawFromCoordinate(x,y,x1,y1);
       _p_var.show = true;
     }
@@ -232,6 +232,11 @@ var SelectArea = (function(){
     */
     sa.showWithSize = function(x,y,w,h){
       this.show(x,y,w+x,h+y);
+    }
+    sa.showFullsize = function(){
+      var p_bcr = this.target.getBoundingClientRect();
+
+      this.show(0,0,p_bcr.width,p_bcr.height);
     }
     /**
     * UI숨기기
