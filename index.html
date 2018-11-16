@@ -49,8 +49,9 @@
 	var sa0,sa1,sa2,sa3,sa4,sa5,sa6;
 	window.onload = function(){
 		sa0 = new SelectArea(document.querySelector("#test-box0"));
+		sa0.setRangeTarget(document.querySelector("#test-box-0"))
 		sa0.addEventListener('change',function(evt){ // 커스텀 이벤트
-			console.log("sa0",evt.type,JSON.stringify(this.selectedArea.getBoundingClientRect()));
+			// console.log("sa0",evt.type,JSON.stringify(this.selectedArea.getBoundingClientRect()));
 			document.querySelector('#test-out0').value=JSON.stringify(this.selectedArea.getBoundingClientRect())
 			var r = this.getSelectedAreaRect()
 			var f = document.form_sa0;
@@ -148,9 +149,13 @@
 		</p>
 		<hr />
 		<form name="form_sa0">
-			<div style="background-color:#abc; width:200px; height:200px; margin: 0 auto" id="test-box0" >
-				test-box0
+			<div style="background-color:#369; width:300px; height:300px; margin: 0 auto" id="test-box-0" >
+				test-box-0
+				<div style="background-color:#abc; width:200px; height:200px; margin: 0 auto" id="test-box0" >
+					test-box0
+				</div>
 			</div>
+			
 			<button type="button" onclick="sa0.show()">.show()</button>
 			<button type="button" onclick="sa0.show(30,30,10,10)">.show(30,30,10,10)</button>
 			<button type="button" onclick="sa0.show(30,30,1000,1000)">.show(30,30,1000,1000)</button>

@@ -181,17 +181,19 @@ var SelectArea = (function(){
       var gapX = p_bcr.x-r_bcr.x;
       var gapY = p_bcr.y-r_bcr.y;
       // console.log(p_bcr)
-      if(x == undefined) x = gapX;
-      if(y == undefined) y = gapY;
+      if(x == undefined) x = 0;
+      if(y == undefined) y = 0;
       if(x1 == undefined) x1 = p_bcr.width + x;
       if(y1 == undefined) y1 = p_bcr.height + y;
       var t = 0;
       if(x > x1){t = x;x = x1;x1 = t;}
       if(y > y1){t = y;y = y1;y1 = t;}
-      this._x = x;
-      this._y = y;
-      this._x1 = x1;
-      this._y1 = y1
+      this.x = x;
+      this.y = y;
+      this._x = x+gapX;
+      this._y = y+gapY;
+      this._x1 = x1+gapX;
+      this._y1 = y1+gapY;
       this.syncPosCoordinate(x,y,x1,y1);
     }
     /**
@@ -219,7 +221,13 @@ var SelectArea = (function(){
     * @param  {number} y1
     */
     sa.syncPosCoordinate = function(x,y,x1,y1){
-      _syncPosCoordinate(this,x,y,x1,y1);
+      var p_bcr = this.target.getBoundingClientRect();
+      var r_bcr = this.rangeTarget.getBoundingClientRect();
+      var gapX = p_bcr.x-r_bcr.x;
+      var gapY = p_bcr.y-r_bcr.y;
+      
+      _syncPosCoordinate(this,x+gapX,y+gapY,x1+gapX,y1+gapY);
+      // _syncPosCoordinate(this,x,y,x1,y1);
       this.dispatchEvent((new CustomEvent("change", {}) ));
     }
     /**
@@ -228,8 +236,8 @@ var SelectArea = (function(){
     * @return {DOMRect}
     */
     sa.getSelectedAreaRect=function(){
-      var x = Math.min(this._x,this._x1);
-      var y = Math.min(this._y,this._y1);
+      var x = this.x;
+      var y = this.y;
       if(DOMRect){
         return new DOMRect(x,y,this.w,this.h);
       }else{
@@ -246,23 +254,23 @@ var SelectArea = (function(){
     * @param  {number} h
     */
     sa.moveAndSize = function(x,y,w,h){
-      if(!this.outOfRange){
-        var p_bcr = sa.target.getBoundingClientRect();
-        var r_bcr = sa.rangeTarget.getBoundingClientRect();
-        x = Math.max(Math.min(r_bcr.width,x),0)
-        y = Math.max(Math.min(r_bcr.height,y),0)
-        w = Math.max(Math.min(r_bcr.width,w),0)
-        h = Math.max(Math.min(r_bcr.height,h),0)
-        if(x+w>r_bcr.width){
-          x = this._x;
-          w = r_bcr.width-x;
-        }
-        if(y+h>r_bcr.height){
-          y = this._y;
-          h = r_bcr.width-y;
-        }
-      }
-      // console.log(x,y,x+w,y+h);
+      // if(!this.outOfRange){
+      //   var p_bcr = sa.target.getBoundingClientRect();
+      //   var r_bcr = sa.rangeTarget.getBoundingClientRect();
+      //   x = Math.max(Math.min(p_bcr.width,x),0)
+      //   y = Math.max(Math.min(p_bcr.height,y),0)
+      //   w = Math.max(Math.min(p_bcr.width,w),0)
+      //   h = Math.max(Math.min(p_bcr.height,h),0)
+      //   if(x+w>p_bcr.width){
+      //     x = this.x;
+      //     w = p_bcr.width-x;
+      //   }
+      //   if(y+h>p_bcr.height){
+      //     y = this.y;
+      //     h = p_bcr.width-y;
+      //   }
+      // }
+      console.log(x,y,x+w,y+h);
       this.syncPosCoordinate(x,y,x+w,y+h);
     }
     /**
@@ -271,23 +279,23 @@ var SelectArea = (function(){
     * @param  {number} y 
     */
     sa.moveBy = function(x,y){
-      // if(!this.outOfRange){
-      //   var p_bcr = sa.target.getBoundingClientRect();
-      //   if(this._x+x>p_bcr.width){
-      //     x = p_bcr.width-this._x;
-      //   }
-      //   if(this._x+x<0){
-      //     x = -1*this._x;
-      //   }
-      //   if(this._y+y>p_bcr.width){
-      //     y = p_bcr.width-this._y;
-      //   }
-      //   if(this._y+y<0){
-      //     y = -1*this._y;
-      //   }
-      // }
-      // console.log(x,y,this._x+x,this._y+y,this.w,this.h)
-      this.moveTo(this._x+x,this._y+y);
+      if(!this.outOfRange){
+        var p_bcr = sa.target.getBoundingClientRect();
+        if(this._x+x>p_bcr.width){
+          x = p_bcr.width-this._x;
+        }
+        if(this._x+x<0){
+          x = -1*this._x;
+        }
+        if(this._y+y>p_bcr.width){
+          y = p_bcr.width-this._y;
+        }
+        if(this._y+y<0){
+          y = -1*this._y;
+        }
+      }
+      // console.log(x,y,this.x+x,this.y+y,this.w,this.h)
+      this.moveTo(this.x+x,this.y+y);
     }
     sa.moveTo = function(x,y){
       this.moveAndSize(x,y,this.w,this.h);
@@ -307,14 +315,14 @@ var SelectArea = (function(){
      */
     sa.sizeTo = function(w,h){
       // console.log(x,y,this._x+x,this._y+y,this.w,this.h)
-      this.moveAndSize(this._x,this._y,w,h);
+      this.moveAndSize(this.x,this.y,w,h);
     }
     /**
     * 화면 다시 그리기
     * onresize 를 위해서 만듬
     */
     sa.resync = function(){
-      this.syncPosCoordinate(this._x,this._y,this._x1,this._y1);
+      this.syncPosCoordinate(this.x,this.y,this.x1,this.y1);
     }
     /**
     * 상재적 좌표로 설정
@@ -327,10 +335,10 @@ var SelectArea = (function(){
       var t = 0;
       // var p_bcr = sa.target.getBoundingClientRect();
       
-      var x_e = this._x+x;
-      var y_e = this._y+y;
-      var x1_e = this._x1+x1;
-      var y1_e = this._y1+y1;
+      var x_e = this.x+x;
+      var y_e = this.y+y;
+      var x1_e = x_e+this.w+x1;
+      var y1_e = y_e+this.h+y1;
       var w = x1_e-x_e;
       var h = y1_e-y_e;
       // console.log(x,y,w,h,x1,y1)
@@ -349,12 +357,12 @@ var SelectArea = (function(){
     * selectedArea 이동 후 좌표값 재계산용
     * @param  {Boolean} thisC 
     */
-    sa.toDragable_onpointerup = function(thisC){
+    sa.toDragable_onpointerup = function(sa){
       return function(evt){
         var t = 0;
-        if(thisC._x > thisC._x1){t = thisC._x;thisC._x = thisC._x1;thisC._x1 = t;}
-        if(thisC._y > thisC._y1){t = thisC._y;thisC._y = thisC._y1;thisC._y1 = t;}
-        thisC.syncPosCoordinate(thisC._x,thisC._y,thisC._x1,thisC._y1);
+        if(sa._x > sa._x1){t = sa._x;sa._x = sa._x1;sa._x1 = t;}
+        if(sa._y > sa._y1){t = sa._y;sa._y = sa._y1;sa._y1 = t;}
+        _syncPosCoordinate(sa,sa._x,sa._y,sa._x1,sa._y1);
       }
     }(sa)
     
@@ -412,6 +420,8 @@ var SelectArea = (function(){
   * @param  {number} y1 
   */
   var _syncPosCoordinate = function(sa,x,y,x1,y1){
+    // 여기의 x,y,x1,y1은 rangeTarget 기준이다.
+    console.log(x,y,x1,y1);
     var t ;
     var scrollX = (((t = document.documentElement) || (t = document.body.parentNode)) && typeof t.scrollLeft == 'number' ? t : document.body).scrollLeft;
     var scrollY = (((t = document.documentElement) || (t = document.body.parentNode))  && typeof t.scrollTop == 'number' ? t : document.body).scrollTop
@@ -420,12 +430,12 @@ var SelectArea = (function(){
     var gapX = p_bcr.x-r_bcr.x;
     var gapY = p_bcr.y-r_bcr.y;
     if(!sa.outOfRange){  
-      var x_e = Math.max(x,0);
+      var x_e = Math.max(x,-1*gapX);
       var x1_e = Math.min(x1,r_bcr.width);
-      var y_e = Math.max(y,0);
+      var y_e = Math.max(y,-1*gapY);
       var y1_e = Math.min(y1,r_bcr.height);
-      var x_min = Math.max(Math.min(x_e,x1_e),0);
-      var y_min = Math.max(Math.min(y_e,y1_e),0);
+      var x_min = Math.max(Math.min(x_e,x1_e),-1*gapX);
+      var y_min = Math.max(Math.min(y_e,y1_e),-1*gapY);
       var x_max = Math.min(Math.max(x_e,x1_e),r_bcr.width);
       var y_max = Math.min(Math.max(y_e,y1_e),r_bcr.height);
       
@@ -452,9 +462,10 @@ var SelectArea = (function(){
     sa.w = w;
     sa.h = h;
     sa._x1 = x1_e;
-    sa._y1 = y1_e
+    sa._y1 = y1_e;
     sa.x = x_min-gapX;
     sa.y = y_min-gapY;
+    console.log(sa.x)
     
     
     sa.box.pointers[0].setAttribute('data-x',sa.x.toFixed(0));
