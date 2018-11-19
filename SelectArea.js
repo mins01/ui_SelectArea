@@ -52,8 +52,8 @@ var SelectArea = (function(){
         var x = touch.X;
         var y = touch.Y;
       }else{
-        var x = evt.tx;
-        var y = evt.ty;
+        var x = evt.x;
+        var y = evt.y;
       }
       return [x,y];
     }
