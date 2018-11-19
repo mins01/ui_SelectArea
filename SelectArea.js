@@ -10,31 +10,31 @@
 
 // CustomEvent 호환용 (for IE)
 (function () {
-
+  
   if ( typeof window.CustomEvent === "function" ) return false;
-
+  
   function CustomEvent ( event, params ) {
     params = params || { bubbles: false, cancelable: false, detail: undefined };
     var evt = document.createEvent( 'CustomEvent' );
     evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
     return evt;
   }
-
+  
   CustomEvent.prototype = window.Event.prototype;
-
+  
   window.CustomEvent = CustomEvent;
 })();
 
 var SelectArea = (function(){
-
+  
   /**
-   * toDraggable
-   * @param  {html_node} target
-   * @param  {function} cb_onpointerdown
-   * @param  {function} cb_onpointermove
-   * @param  {function} cb_onpointerup
-   * @return {function} removeEventListener Function
-   */
+  * toDraggable
+  * @param  {html_node} target
+  * @param  {function} cb_onpointerdown
+  * @param  {function} cb_onpointermove
+  * @param  {function} cb_onpointerup
+  * @return {function} removeEventListener Function
+  */
   var toDraggable = function(target,cb_onpointerdown,cb_onpointermove,cb_onpointerup){
     var data={
       "ing":false,
@@ -113,7 +113,7 @@ var SelectArea = (function(){
   * @param  {html_node} target 기준 대상
   * @return {html_node_with_SelectArea}        UI용 노드
   */
-  var _create = function(target,_p_var){
+  var _create = function(_p_var){
     var sa = document.createElement('div');
     sa.className="selectArea";
     sa.innerHTML =
@@ -134,40 +134,14 @@ var SelectArea = (function(){
     sa.box.pointers=sa.querySelectorAll('.selectArea-pointer');
     sa.box.layout=sa.querySelector('.selectArea-layout');
     sa.selectedArea = sa.box.layout;
-
-    sa.target = target
-    sa.target.sa = sa;
-    sa.rangeTarget = sa.target;
-    var p_bcr = sa.target.getBoundingClientRect();
-
-    sa.tx = 0;
-    sa.ty = 0;
-    sa.tx1 = p_bcr.width;
-    sa.ty1 = p_bcr.height;
-    sa.rx = 0;
-    sa.ry = 0;
-    sa.w = p_bcr.width;
-    sa.h = p_bcr.height;
-    sa.rx1 = sa.rx+sa.w;
-    sa.ry1 = sa.ry+sa.h;
-
-    sa.tleft = sa.tx;
-    sa.ttop = sa.ty;
-    sa.tgight = sa.w+sa.tx;
-    sa.tbottom = sa.h+sa.ty;
-
-    sa.rleft = sa.rx;
-    sa.rtop = sa.ry;
-    sa.rright = sa.w+sa.rx;
-    sa.rbottom = sa.h+sa.ry;
-
+    
     /** @member {Boolean} outOfRange 대상을 벗어나서 설정 할 수 있는가? */
     sa.outOfRange = false;
-
+    
     _p_var.autoRedraw = true;
     return sa;
   }
-
+  
   /**
   * 기본 메소드 설정용
   * @param  {html_node_with_SelectArea} sa
@@ -180,14 +154,62 @@ var SelectArea = (function(){
     * 대상 지정 설정/변경
     * @param  {html_node} target
     */
-    sa.setTarget = function(target){
-      this.hide();
-      this.target = target;
-      this.target.sa = this;
+    sa.setTarget = function(target,rangeTarget){
+      var sa = this;
+      sa.hide();
+      sa.target = target;
+      sa.target.sa = sa;
+      // sa.rangeTarget = sa.target;
+      if(!rangeTarget) rangeTarget = target;
+      sa.setRangeTarget(rangeTarget);
+      var p_bcr = sa.target.getBoundingClientRect();
+      
+      sa.tx = 0;
+      sa.ty = 0;
+      sa.tx1 = p_bcr.width;
+      sa.ty1 = p_bcr.height;
+      sa.rx = 0;
+      sa.ry = 0;
+      sa.w = p_bcr.width;
+      sa.h = p_bcr.height;
+      sa.rx1 = sa.rx+sa.w;
+      sa.ry1 = sa.ry+sa.h;
+      
+      sa.tleft = sa.tx;
+      sa.ttop = sa.ty;
+      sa.tgight = sa.w+sa.tx;
+      sa.tbottom = sa.h+sa.ty;
+      
+      sa.rleft = sa.rx;
+      sa.rtop = sa.ry;
+      sa.rright = sa.w+sa.rx;
+      sa.rbottom = sa.h+sa.ry;
     }
     sa.setRangeTarget = function(rangeTarget){
       this.hide();
-      this.rangeTarget = rangeTarget;
+      var sa = this;
+      if(sa.rangeTarget && sa.rangeTarget.removeToDraggable) sa.rangeTarget.removeToDraggable();
+      sa.rangeTarget = rangeTarget;
+      var _info = {x0:0,y0:0}
+      sa.rangeTarget.removeToDraggable = toDraggable(sa.rangeTarget,function(evt,x,y){
+        _p_var.autoRedraw = false;
+        var p_bcr = sa.target.getBoundingClientRect();
+        sa.show(x-p_bcr.x,y-p_bcr.y,x-p_bcr.x,y-p_bcr.y);
+        _info.x0 = x;
+        _info.y0 = y;
+        console.log(x-p_bcr.x,y-p_bcr.y,x-p_bcr.x,y-p_bcr.y)
+      },function(thisC){return function(evt,gapX,gapY){
+        thisC.drawFromCoordinateBy(0,0,gapX,gapY)
+        thisC.dispatchEvent((new CustomEvent("change", {})));
+      }}(sa),
+      function(evt,x,y){
+        _p_var.autoRedraw = true;
+        sa.redraw();
+      })
+      
+      
+      
+      
     }
     /**
     * show
@@ -235,7 +257,7 @@ var SelectArea = (function(){
     }
     sa.showFullsize = function(){
       var p_bcr = this.target.getBoundingClientRect();
-
+      
       this.show(0,0,p_bcr.width,p_bcr.height);
     }
     /**
@@ -268,7 +290,7 @@ var SelectArea = (function(){
       var r_bcr = this.rangeTarget.getBoundingClientRect();
       var gapX = p_bcr.x-r_bcr.x;
       var gapY = p_bcr.y-r_bcr.y;
-
+      
       // console.log(x,y,x1,y1,this.w,this.h);
       _drawFromCoordinate(this,x+gapX,y+gapY,x1+gapX,y1+gapY,fixedSize);
       if(_p_var.autoRedraw) this.redraw();
@@ -285,10 +307,10 @@ var SelectArea = (function(){
       if(DOMRect){
         return new DOMRect(x,y,this.w,this.h);
       }else{
-
+        
         return {"x":x,"y":y,"width":this.w,"height":this.h,"left":x,"top":y,"right":x+this.w,"bottom":y+this.h};
       }
-
+      
     }
     /**
     * 상대적 좌표이동
@@ -355,7 +377,7 @@ var SelectArea = (function(){
         _drawFromCoordinate(this,this.rleft,this.rtop,this.rright,this.rbottom);
         this.dispatchEvent((new CustomEvent("redraw", {}) ));
       }
-
+      
     }
   }
   // 대상에 이벤트 초기화
@@ -372,8 +394,8 @@ var SelectArea = (function(){
     /**
     * selectedArea 이동 시작시(protect)
     */
-    var _toDraggable_onpointerdown = function(sa,x,y){
-      return function(evt){
+    var _toDraggable_onpointerdown = function(sa){
+      return function(evt,x,y){
         _p_var.autoRedraw = false;
       }
     }(sa)
@@ -381,14 +403,14 @@ var SelectArea = (function(){
     * selectedArea 이동 후 좌표값 재계산용(protect)
     */
     var _toDraggable_onpointerup = function(sa){
-      return function(evt){
+      return function(evt,x,y){
         _p_var.autoRedraw = true;
         sa.redraw();
       }
     }(sa)
     window.addEventListener("resize",_window_onresize);
     window.addEventListener("scroll",_window_onresize);
-
+    
     sa.box.layout.removeToDraggable = toDraggable(sa.box.layout,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.moveBy(gapX,gapY);
       thisC.dispatchEvent((new CustomEvent("change", {}) ));
@@ -425,10 +447,14 @@ var SelectArea = (function(){
       thisC.drawFromCoordinateBy(gapX,0,0,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
     }}(sa),_toDraggable_onpointerup);
-
-
+    var t = function(sa){
+      return function(){
+        sa.hide();
+      }
+    }(sa)
+    sa.bg.addEventListener('click',t)
   }
-
+  
   /**
   * 영역의 이동, 차지에 대한 제어 부분
   * @param  {html_node_with_SelectArea} sa
@@ -441,7 +467,7 @@ var SelectArea = (function(){
     // 여기의 x,y,x1,y1은 rangeTarget 기준이다.
     // console.log(x,y,x1,y1);
     var t ;
-
+    
     var scrollX = (((t = document.documentElement) || (t = document.body.parentNode)) && typeof t.scrollLeft == 'number' ? t : document.body).scrollLeft;
     var scrollY = (((t = document.documentElement) || (t = document.body.parentNode))  && typeof t.scrollTop == 'number' ? t : document.body).scrollTop
     var p_bcr = sa.target.getBoundingClientRect();
@@ -452,7 +478,7 @@ var SelectArea = (function(){
     var x1_e = x1
     var y_e = y
     var y1_e = y1
-
+    
     if(!sa.outOfRange){
       var rleft = Math.max(Math.min(x_e,x1_e),0);
       var rtop = Math.max(Math.min(y_e,y1_e),0);
@@ -465,7 +491,7 @@ var SelectArea = (function(){
         }else if(rleft<=0){
           rleft = 0;
           rright = sa.w;
-
+          
         }
         if(rbottom>=r_bcr.height){
           rbottom = r_bcr.height;
@@ -482,44 +508,44 @@ var SelectArea = (function(){
       var rbottom = Math.max(y_e,y1_e)
     }
     // console.log(x_e,y_e,x1_e,y1_e);
-
-
+    
+    
     var w = rright-rleft;
     var h = rbottom-rtop;
-
+    
     sa.rx = x_e;
     sa.ry = y_e;
     sa.rx1 = x1_e;
     sa.ry1 = y1_e;
-
+    
     sa.tx = sa.rx-gapX;
     sa.ty = sa.ry-gapY;
     sa.tx1 = sa.rx1-gapX;
     sa.ty1 = sa.ry1-gapY;
-
-
+    
+    
     sa.rleft = rleft;
     sa.rtop = rtop;
     sa.rright = rright;
     sa.rbottom = rbottom;
-
-
+    
+    
     sa.tleft = rleft-gapX;
     sa.ttop = rtop-gapY;
     sa.tright = rright-gapX;
     sa.tbottom = rbottom-gapY;
-
-
+    
+    
     sa.w = w;
     sa.h = h;
     // console.log("sa.w",sa.w)
-
+    
     // console.log(sa.tx)
     sa.box.pointers[0].setAttribute('data-x',sa.tleft.toFixed(0));
     sa.box.pointers[0].setAttribute('data-y',sa.ttop.toFixed(0));
     sa.box.pointers[4].setAttribute('data-w',w.toFixed(0));
     sa.box.pointers[4].setAttribute('data-h',h.toFixed(0));
-
+    
     sa.box.style.left = rleft+"px";
     sa.box.style.top = rtop+"px";
     sa.box.style.width = w+"px";
@@ -533,8 +559,8 @@ var SelectArea = (function(){
     sa.bg.style.borderRightWidth = Math.max(0,Math.min(r_bcr.width,(r_bcr.width-rleft-w)))+"px";
     sa.bg.style.borderBottomWidth =  Math.max(0,Math.min(r_bcr.height,(r_bcr.height-rtop-h)))+"px";
   }
-
-  return function(target){
+  
+  return function(target,rangeTarget){
     /**
     * protect 변수 선언
     */
@@ -542,10 +568,11 @@ var SelectArea = (function(){
       "autoRedraw":true,
       "show":false
     }
-
-    var sa = _create(target,_p_var);
+    
+    var sa = _create(_p_var);
     _initMethod(sa,_p_var);
     _initEvent(sa,_p_var)
+    sa.setTarget(target,rangeTarget);
     return sa;
   }
 })()
