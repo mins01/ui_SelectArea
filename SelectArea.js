@@ -421,39 +421,48 @@ var SelectArea = (function(){
     
     sa.box.layout.removeToDraggable = toDraggable(sa.box.layout,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.moveBy(gapX,gapY);
-      thisC.dispatchEvent((new CustomEvent("change", {}) ));
+      thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[0].removeToDraggable = toDraggable(sa.box.pointers[0],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(gapX,gapY,0,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[1].removeToDraggable = toDraggable(sa.box.pointers[1],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,gapY,0,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[2].removeToDraggable = toDraggable(sa.box.pointers[2],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,gapY,gapX,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[3].removeToDraggable = toDraggable(sa.box.pointers[3],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,0,gapX,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[4].removeToDraggable = toDraggable(sa.box.pointers[4],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,0,gapX,gapY)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[5].removeToDraggable = toDraggable(sa.box.pointers[5],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,0,0,gapY)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[6].removeToDraggable = toDraggable(sa.box.pointers[6],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(gapX,0,0,gapY)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     sa.box.pointers[7].removeToDraggable = toDraggable(sa.box.pointers[7],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(gapX,0,0,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
+      return true;
     }}(sa),_toDraggable_onpointerup);
     var t = function(sa){
       return function(){
