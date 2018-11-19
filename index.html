@@ -161,12 +161,15 @@
 				<li>SelectArea.showFullsize() //타겟의 크기에 맞춰서 보이기</li>
 				<li>SelectArea.showWithSize(x,y,w,h) //시작과 크기로 보이기(미지정 시 최대치)</li>
 				<li>SelectArea.hide() //감추기</li>
+				<li>SelectArea.enable() //사용가능</li>
+				<li>SelectArea.disable() //사용불가</li>
 				<li>SelectArea.getSelectedAreaRect() //현재 선택된 영역의 정보(target에 상대적)</li>
 				<li>SelectArea.moveAndSize(x,y,w,h) //이동 및 너비 조정,(이동 위치에 따라 너비가 변경 될 수 있다)</li>
 				<li>SelectArea.moveBy(x,y,fixedSize) //x,y 좌표로 상대적 이동</li>
 				<li>SelectArea.sizeBy(w,h) //상대적 크기 조절</li>
 				<li>SelectArea.redraw() //현재의 정보로 다시 그린다. (기본적으로 메소드 호출후 자동으로 불린다.)</li>
 				<li>SelectArea.drawFromCoordinateBy(x,y,x1,y1) //시작과 끝좌표의 상대 값으로 다시 그린다.</li>
+				
 
 			</ul>
 			CustomEvent
@@ -185,12 +188,13 @@
 
 			<button type="button" onclick="sa0.show()">.show()</button>
 			<button type="button" onclick="sa0.showFullsize()">.showFullsize()</button>
-
 			<button type="button" onclick="sa0.show(30,30,10,10)">.show(30,30,10,10)</button>
 			<button type="button" onclick="sa0.show(30,30,1000,1000)">.show(30,30,1000,1000)</button>
 			<button type="button" onclick="sa0.show(100,100,100,100)">.show(100,100,100,100)</button>
 			<button type="button" onclick="sa0.showWithSize(100,100,100,100)">.showWithSize(100,100,100,100)</button>
 			<button type="button" onclick="sa0.hide()">.hide()</button><br />
+			<button type="button" onclick="sa0.enable()">.enable()</button>
+			<button type="button" onclick="sa0.disable()">.disable()</button>			
 			<button type="button" onclick="sa0.destroy()">.destroy()</button><br />
 			<button type="button" onclick="sa0.moveBy(-1,0)" >.moveBy(-1,0)</button><button type="button" onclick="sa0.moveBy(1,0)" >.moveBy(1,0)</button>
 			<button type="button" onclick="sa0.moveBy(0,-1)" >.moveBy(0,-1</button><button type="button" onclick="sa0.moveBy(0,1)" >.moveBy(0,1)</button>
