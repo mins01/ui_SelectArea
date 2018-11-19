@@ -192,17 +192,20 @@ var SelectArea = (function(){
       sa.rangeTarget = rangeTarget;
       var _info = {x0:0,y0:0}
       sa.rangeTarget.removeToDraggable = toDraggable(sa.rangeTarget,function(evt,x,y){
+        if(!_p_var.enable){return false;}
         _p_var.autoRedraw = false;
         var p_bcr = sa.target.getBoundingClientRect();
         sa.show(x-p_bcr.x,y-p_bcr.y,x-p_bcr.x,y-p_bcr.y);
         _info.x0 = x;
         _info.y0 = y;
-        console.log(x-p_bcr.x,y-p_bcr.y,x-p_bcr.x,y-p_bcr.y)
+        // console.log(x-p_bcr.x,y-p_bcr.y,x-p_bcr.x,y-p_bcr.y)
       },function(thisC){return function(evt,gapX,gapY){
+        if(!_p_var.enable){return false;}
         thisC.drawFromCoordinateBy(0,0,gapX,gapY)
         thisC.dispatchEvent((new CustomEvent("change", {})));
       }}(sa),
       function(evt,x,y){
+        if(!_p_var.enable){return false;}
         _p_var.autoRedraw = true;
         sa.redraw();
       })
