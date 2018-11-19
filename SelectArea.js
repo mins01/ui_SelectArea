@@ -400,6 +400,7 @@ var SelectArea = (function(){
     */
     var _toDraggable_onpointerdown = function(sa){
       return function(evt,x,y){
+        if(!_p_var.enable) return false;
         _p_var.autoRedraw = false;
         return true;
       }
@@ -409,8 +410,10 @@ var SelectArea = (function(){
     */
     var _toDraggable_onpointerup = function(sa){
       return function(evt,x,y){
+        if(!_p_var.enable) return false;
         _p_var.autoRedraw = true;
         sa.redraw();
+        return true;
       }
     }(sa)
     window.addEventListener("resize",_window_onresize);
