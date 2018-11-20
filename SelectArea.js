@@ -33,7 +33,7 @@ var SelectArea = (function(){
   * @param  {function} cb_onpointerdown
   * @param  {function} cb_onpointermove
   * @param  {function} cb_onpointerup
-  * @return {function} removeEventListener Function
+  * @return {object} {"enable":function , "disable":function}
   */
   var toDraggable = function(target,cb_onpointerdown,cb_onpointermove,cb_onpointerup){
     var data={
@@ -64,16 +64,10 @@ var SelectArea = (function(){
         var xy = _getXY(evt);
         data.x0 = xy[0];
         data.y0 = xy[1];
-        var r = true;
-        if(cb_onpointerdown){
-          r = cb_onpointerdown(evt,xy[0],xy[1]);
-        }
-        if(r){ 
-          evt.preventDefault();evt.stopPropagation(); 
-          document.addEventListener('pointermove',_onpointermove);
-          document.addEventListener('pointerup',_onpointerup);
-        }
-        
+        if(cb_onpointerdown) cb_onpointerdown(evt,xy[0],xy[1]);
+        evt.preventDefault();evt.stopPropagation(); 
+        document.addEventListener('pointermove',_onpointermove);
+        document.addEventListener('pointerup',_onpointerup);
         return false;
       }
     }(target,data,cb_onpointerdown)
@@ -85,36 +79,41 @@ var SelectArea = (function(){
         var gapY = xy[1]-data.y0;
         data.x0 = xy[0];
         data.y0 = xy[1];
-        var r = true;
-        if(cb_onpointermove){
-          r = cb_onpointermove(evt,gapX,gapY);
-        }
-        if(r){ evt.preventDefault();evt.stopPropagation(); }
+        if(cb_onpointermove) cb_onpointermove(evt,gapX,gapY);
+        evt.preventDefault();evt.stopPropagation();
         return false;
       }
     }(target,data,cb_onpointermove)
     var _onpointerup = function(target,data,cb_onpointerup){
       return function(evt){
-        var r = true;
-        if(data.ing && cb_onpointerup){
-          r = cb_onpointerup(evt);
-        }
+        if(data.ing && cb_onpointerup) cb_onpointerup(evt);
         data.ing = false;
-        if(r){ 
-          evt.preventDefault();evt.stopPropagation();
-          document.removeEventListener('pointermove',_onpointermove);
-          document.removeEventListener('pointerup',_onpointerup);
-        }
+        evt.preventDefault();evt.stopPropagation();
+        document.removeEventListener('pointermove',_onpointermove);
+        document.removeEventListener('pointerup',_onpointerup);
         return false;
       }
     }(target,data,cb_onpointerup)
     var _notouchmove = function(evt){ evt.preventDefault();evt.stopPropagation()	;return false;}
-    target.addEventListener('pointerdown',_onpointerdown);
-    target.addEventListener('touchmove',_notouchmove);
-    return function(){
-      target.removeEventListener('pointerdown',_onpointerdown);
-      target.removeEventListener('touchmove',_notouchmove);
+    var _enable = false;
+    var enable = function(){
+      if(!_enable){
+        target.addEventListener('pointerdown',_onpointerdown);
+        target.addEventListener('touchmove',_notouchmove);  
+        _enable = true;
+      }
+      
     }
+    var disable = function(){
+      if(_enable){
+        target.removeEventListener('pointerdown',_onpointerdown);
+        target.removeEventListener('touchmove',_notouchmove);
+        _enable = false;
+      }
+    }
+    enable();
+    
+    return {"enable":enable,"disable":disable}
   }
   /**
   * UI 기본형 생성
@@ -196,10 +195,10 @@ var SelectArea = (function(){
     sa.setRangeTarget = function(rangeTarget){
       this.hide();
       var sa = this;
-      if(sa.rangeTarget && sa.rangeTarget.removeToDraggable) sa.rangeTarget.removeToDraggable();
+      if(sa.rangeTarget && sa.rangeTarget.toDraggableCtrl) sa.rangeTarget.toDraggableCtrl.disable();
       sa.rangeTarget = rangeTarget;
       var _info = {x0:0,y0:0}
-      sa.rangeTarget.removeToDraggable = toDraggable(sa.rangeTarget,function(evt,x,y){
+      sa.rangeTarget.toDraggableCtrl = toDraggable(sa.rangeTarget,function(evt,x,y){
         if(!_p_var.enable){return false;}
         _p_var.autoRedraw = false;
         var p_bcr = sa.target.getBoundingClientRect();
@@ -267,10 +266,12 @@ var SelectArea = (function(){
     }
     sa.enable = function(){
       _p_var.enable = true;
+      sa.rangeTarget.toDraggableCtrl.enable();
     }
     sa.disable = function(){
       this.hide();
       _p_var.enable = false;
+      sa.rangeTarget.toDraggableCtrl.disable();
     }
     /**
     * 파괴하기
@@ -421,47 +422,47 @@ var SelectArea = (function(){
     window.addEventListener("resize",_window_onresize);
     window.addEventListener("scroll",_window_onresize);
     
-    sa.box.layout.removeToDraggable = toDraggable(sa.box.layout,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.layout.toDraggableCtrl = toDraggable(sa.box.layout,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.moveBy(gapX,gapY);
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[0].removeToDraggable = toDraggable(sa.box.pointers[0],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[0].toDraggableCtrl = toDraggable(sa.box.pointers[0],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(gapX,gapY,0,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[1].removeToDraggable = toDraggable(sa.box.pointers[1],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[1].toDraggableCtrl = toDraggable(sa.box.pointers[1],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,gapY,0,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[2].removeToDraggable = toDraggable(sa.box.pointers[2],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[2].toDraggableCtrl = toDraggable(sa.box.pointers[2],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,gapY,gapX,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[3].removeToDraggable = toDraggable(sa.box.pointers[3],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[3].toDraggableCtrl = toDraggable(sa.box.pointers[3],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,0,gapX,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[4].removeToDraggable = toDraggable(sa.box.pointers[4],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[4].toDraggableCtrl = toDraggable(sa.box.pointers[4],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,0,gapX,gapY)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[5].removeToDraggable = toDraggable(sa.box.pointers[5],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[5].toDraggableCtrl = toDraggable(sa.box.pointers[5],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(0,0,0,gapY)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[6].removeToDraggable = toDraggable(sa.box.pointers[6],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[6].toDraggableCtrl = toDraggable(sa.box.pointers[6],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(gapX,0,0,gapY)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
     }}(sa),_toDraggable_onpointerup);
-    sa.box.pointers[7].removeToDraggable = toDraggable(sa.box.pointers[7],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.pointers[7].toDraggableCtrl = toDraggable(sa.box.pointers[7],_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.drawFromCoordinateBy(gapX,0,0,0)
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
