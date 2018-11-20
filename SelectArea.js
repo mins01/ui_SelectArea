@@ -89,7 +89,7 @@ var SelectArea = (function(){
         if(cb_onpointermove){
           r = cb_onpointermove(evt,gapX,gapY);
         }
-        if(!r){ evt.preventDefault();evt.stopPropagation(); }
+        if(r){ evt.preventDefault();evt.stopPropagation(); }
         return false;
       }
     }(target,data,cb_onpointermove)
@@ -100,9 +100,11 @@ var SelectArea = (function(){
           r = cb_onpointerup(evt);
         }
         data.ing = false;
-        if(!r){ evt.preventDefault();evt.stopPropagation(); }
-        document.removeEventListener('pointermove',_onpointermove);
-        document.removeEventListener('pointerup',_onpointerup);
+        if(r){ 
+          evt.preventDefault();evt.stopPropagation();
+          document.removeEventListener('pointermove',_onpointermove);
+          document.removeEventListener('pointerup',_onpointerup);
+        }
         return false;
       }
     }(target,data,cb_onpointerup)
