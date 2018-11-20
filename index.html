@@ -132,6 +132,11 @@
 		sa16 = SelectArea(document.querySelector("#test-box16"));
 		sa16.show(50,50,100,100);
 
+		sa17 = SelectArea(document.querySelector("#test-box17"));
+		sa17.className = sa17.className +' selectArea-no-info';
+
+		sa17.show(50,50,100,100);
+
 	});
 	</script>
 
@@ -298,6 +303,13 @@
 				test-box16<br />default = 1em
 			</div>
 		</div>
+		<h2>css .selectArea-no-info</h2>
+		<div style="text-align:center">
+			<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto" id="test-box17" >
+				test-box17<br />selectArea-no-info
+			</div>
+		</div>
+		
 	</div>
 </body>
 </html>

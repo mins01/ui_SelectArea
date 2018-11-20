@@ -116,6 +116,10 @@
 	content: "size: "attr(data-w) "x" attr(data-h) ;
 	white-space: nowrap;;
 }
+.selectArea-no-info .selectArea-pointer[data-index="0"]::after,
+.selectArea-no-info .selectArea-pointer[data-index="4"]::after{
+	display: none;
+}
 .selectArea-pointer[data-index="0"]{
 	top:-0.5em;left:-0.5em;cursor: nw-resize;
 	z-index: 25;
