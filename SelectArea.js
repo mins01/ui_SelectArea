@@ -224,6 +224,13 @@ var SelectArea = (function(){
       
     }
     /**
+     * 현재 보이고있는가?
+     * @return {bool} 현재 보이고있는가?
+     */
+    sa.isShow=function(){
+      return _p_var.show;
+    }
+    /**
     * show
     * UI 보이기 파라메터 지정 안 할 경우 대상(target)의 시작좌표와 마침좌표 사용한다.
     * @param  {number} x  x좌표

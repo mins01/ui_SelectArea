@@ -162,6 +162,7 @@
 				<li>SelectArea(html_node) //위치 기준 대상,이동 위치 기준으로 설정하며 SelectArea UI를 준다.</li>
 				<li>SelectArea.setTarget(html_node) //위치 기준 대상</li>
 				<li>SelectArea.setRangeTarget(html_node) //이동 위치 기준 대상</li>
+				<li>SelectArea.isShow() //현재 보이고있는가?</li>
 				<li>SelectArea.show(x,y,x1,y1) //시작과 끝의 좌표로 보이기(값이 없으면 이전 정보 사용)</li>
 				<li>SelectArea.showFullsize() //타겟의 크기에 맞춰서 보이기</li>
 				<li>SelectArea.showWithSize(x,y,w,h) //시작과 크기로 보이기(미지정 시 최대치)</li>
@@ -191,6 +192,7 @@
 				</div>
 			</div>
 
+			<button type="button" onclick="alert(sa0.isShow())">.isShow()</button>
 			<button type="button" onclick="sa0.show()">.show()</button>
 			<button type="button" onclick="sa0.showFullsize()">.showFullsize()</button>
 			<button type="button" onclick="sa0.show(30,30,10,10)">.show(30,30,10,10)</button>
