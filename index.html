@@ -68,6 +68,18 @@
 		sa0.addEventListener('click',function(evt){
 			console.log("sa0",evt.type);
 		})
+		sa0.addEventListener('show',function(evt){
+			console.log("sa0",evt.type);
+		})
+		sa0.addEventListener('hide',function(evt){
+			console.log("sa0",evt.type);
+		})
+		sa0.addEventListener('enable',function(evt){
+			console.log("sa0",evt.type);
+		})
+		sa0.addEventListener('disable',function(evt){
+			console.log("sa0",evt.type);
+		})
 		sa0.box.layout.addEventListener('click',function(evt){
 			console.log("sa0.box.layout",evt.type);
 		})
@@ -180,7 +192,11 @@
 			</ul>
 			CustomEvent
 			<ul>
+				<li>hide : hide메소드 호출시 </li>
+				<li>show : show 관련 메소드 호출 시</li>
 				<li>change : selectedArea 가 변경되면 발생한다</li>
+				<li>enable : enable 메소드 호출시 </li>
+				<li>disable : disable 메소드 호출시 </li>
 			</ul>
 		</p>
 		<hr />

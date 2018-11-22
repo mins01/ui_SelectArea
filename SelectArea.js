@@ -247,6 +247,7 @@ var SelectArea = (function(){
       if(y1 == undefined) y1 = this.ty1;
       this.drawFromCoordinate(x,y,x1,y1);
       _p_var.show = true;
+      this.dispatchEvent((new CustomEvent("show", {})));
     }
     /**
     * show
@@ -270,15 +271,19 @@ var SelectArea = (function(){
     sa.hide = function(){
       if(this.parentNode) this.parentNode.removeChild(this);
       if(_p_var.show) _p_var.show = false;
+      this.dispatchEvent((new CustomEvent("hide", {})));
+
     }
     sa.enable = function(){
       _p_var.enable = true;
       sa.rangeTarget.toDraggableCtrl.enable();
+      this.dispatchEvent((new CustomEvent("enable", {})));
     }
     sa.disable = function(){
       this.hide();
       _p_var.enable = false;
       sa.rangeTarget.toDraggableCtrl.disable();
+      this.dispatchEvent((new CustomEvent("disable", {})));
     }
     /**
     * 파괴하기
