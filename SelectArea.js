@@ -593,6 +593,10 @@ var SelectArea = (function(){
   }
   
   return function(target,rangeTarget){
+    if(!target){
+      console.error("target is not found");
+      return null;
+    }
     /**
     * protect 변수 선언
     */

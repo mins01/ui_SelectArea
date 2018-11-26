@@ -146,8 +146,15 @@
 
 		sa17 = SelectArea(document.querySelector("#test-box17"));
 		sa17.className = sa17.className +' selectArea-no-info';
-
 		sa17.show(50,50,100,100);
+		
+		sa18 = SelectArea(document.querySelector("#test-box18"));
+		sa18.selectedArea.innerHTML='<div class="contenteditable-div" style="padding: 0;margin: 0;border-width: 0;background-color: transparent;white-space: nowrap;overflow: hidden;" contenteditable="true"><div>text</div><div>text</div></div>';		
+		sa18.show(50,50,250,250);
+		sa19 = SelectArea(document.querySelector("#test-box19"));
+		sa19.className = sa19.className +' selectArea-no-info selectArea-pointer-xs';
+		sa19.selectedArea.innerHTML='<div class="contenteditable-div" style="padding: 0;margin: 0;border-width: 0;background-color: transparent;white-space: nowrap;overflow: hidden;" contenteditable="true"><div>text</div><div>text</div><div>text</div><div>text</div><div>text</div><div>text</div></div>';		
+		sa19.show(50,50,250,250);
 
 	});
 	</script>
@@ -327,6 +334,17 @@
 				test-box17<br />selectArea-no-info
 			</div>
 		</div>
+		<h2>contenteditable</h2>
+		<div style="text-align:center">
+			<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto" id="test-box18" >
+			</div>
+		</div>
+		<button type="button" onclick="alert(sa18.selectedArea.innerText)">내용 확인</button>
+		<div style="text-align:center">
+			<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto" id="test-box19" >
+			</div>
+		</div>
+		<button type="button" onclick="alert(sa19.selectedArea.innerText)">내용 확인</button>
 		
 	</div>
 </body>
