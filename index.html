@@ -155,6 +155,12 @@
 		sa19.className = sa19.className +' selectArea-no-info selectArea-pointer-xs';
 		sa19.selectedArea.innerHTML='<div class="contenteditable-div" style="padding: 0;margin: 0;border-width: 0;background-color: transparent;white-space: nowrap;overflow: hidden;" contenteditable="true"><div>text</div><div>text</div><div>text</div><div>text</div><div>text</div><div>text</div></div>';		
 		sa19.show(50,50,250,250);
+		
+		sa20 = SelectArea(document.querySelector("#test-box20"));
+		sa20.setAppendParent(document.querySelector("#test-box20-1"));
+		sa20.outOfRange=true;
+		sa20.className = sa20.className +' selectArea-no-info selectArea-pointer-xs';
+		sa20.show(50,50,250,250);
 
 	});
 	</script>
@@ -194,6 +200,7 @@
 				<li>SelectArea.sizeBy(w,h) //상대적 크기 조절</li>
 				<li>SelectArea.redraw() //현재의 정보로 다시 그린다. (기본적으로 메소드 호출후 자동으로 불린다.)</li>
 				<li>SelectArea.drawFromCoordinateBy(x,y,x1,y1) //시작과 끝좌표의 상대 값으로 다시 그린다.</li>
+				<li>SelectArea.setAppendParent(html_node) //SelectArea가 위치할 부모 node 설정.(기본은 document.body)</li>
 				
 
 			</ul>
@@ -345,7 +352,13 @@
 			</div>
 		</div>
 		<button type="button" onclick="alert(sa19.selectedArea.innerText)">내용 확인</button>
-		
+		<h2>.setAppendParent()</h2>
+		<div style="text-align:center">
+			<div style="display: inline-block;background-color:#c00; width:320px; height:320px; margin: 0 auto;padding-top:10px;" id="test-box20-1" >
+				<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto;position:static" id="test-box20" >
+				</div>
+			</div>
+		</div>		
 	</div>
 </body>
 </html>

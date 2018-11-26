@@ -218,10 +218,12 @@ var SelectArea = (function(){
         sa.redraw();
         return true;
       })
-      
-      
-      
-      
+    }
+    sa.setAppendParent = function(appendParent){
+      _p_var.appendParent = appendParent;
+    }
+    sa.getAppendParent = function(appendParent){
+      return _p_var.appendParent;
     }
     /**
      * 현재 보이고있는가?
@@ -240,7 +242,7 @@ var SelectArea = (function(){
     */
     sa.show = function(x,y,x1,y1){
       if(!_p_var.enable){return false;}
-      document.body.appendChild(this);
+      _p_var.appendParent.appendChild(this);
       if(x == undefined) x = this.tx;
       if(y == undefined) y = this.ty;
       if(x1 == undefined) x1 = this.tx1;
@@ -603,7 +605,8 @@ var SelectArea = (function(){
     var _p_var={
       "autoRedraw":true,
       "show":false,
-      "enable":true
+      "enable":true,
+      "appendParent":document.body
     }
     
     var sa = _create(_p_var);
