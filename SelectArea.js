@@ -65,7 +65,7 @@ var SelectArea = (function(){
         data.x0 = xy[0];
         data.y0 = xy[1];
         if(cb_onpointerdown) cb_onpointerdown(evt,xy[0],xy[1]);
-        evt.preventDefault();evt.stopPropagation(); 
+        // evt.preventDefault();evt.stopPropagation(); //이벤트 중지 안시킴
         document.addEventListener('pointermove',_onpointermove);
         document.addEventListener('pointerup',_onpointerup);
         return false;
