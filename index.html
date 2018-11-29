@@ -161,6 +161,11 @@
 		sa20.outOfRange=true;
 		sa20.className = sa20.className +' selectArea-no-info selectArea-pointer-xs';
 		sa20.show(50,50,250,250);
+		
+		sa21 = SelectArea(document.querySelector("#test-box21"));
+		sa21.outOfRange=true;
+		sa21.className = sa21.className +' selectArea-no-bg selectArea-pointer-xs';
+		sa21.show(50,50,250,250);
 
 	});
 	</script>
@@ -358,6 +363,12 @@
 				<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto;position:static" id="test-box20" >
 				</div>
 			</div>
+		</div>
+		<h2>rotate</h2>
+		<div style="text-align:center">
+			<div style="display: inline-block;background-color:#369; width:300px; height:300px; margin: 0 auto" id="test-box21" >
+			</div>
+			<input type="range" min="-360" max="360" value="0" oninput='sa21.selectedArea.style.transform="rotate("+this.value+"deg)"' />
 		</div>		
 	</div>
 </body>
