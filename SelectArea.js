@@ -125,7 +125,7 @@ var SelectArea = (function(){
     sa.className="selectArea";
     sa.innerHTML =
     '<div class="selectArea-box">'+
-    '<div  class="selectArea-info"></div>'+
+    '<div class="selectArea-info"></div>'+
     '<button type="button" class="selectArea-pointer" data-index="0" data-x="0" data-y="0"></button>'+
     '<button type="button" class="selectArea-pointer" data-index="1"></button>'+
     '<button type="button" class="selectArea-pointer" data-index="2"></button>'+
@@ -134,12 +134,15 @@ var SelectArea = (function(){
     '<button type="button" class="selectArea-pointer" data-index="5"></button>'+
     '<button type="button" class="selectArea-pointer" data-index="6"></button>'+
     '<button type="button" class="selectArea-pointer" data-index="7"></button>'+
+    '<div class="selectArea-move">'+
     '<div class="selectArea-layout"></div>'+
+    '</div>'+  
     '</div>'+
     '<div class="selectArea-bg"></div>';
     sa.box=sa.querySelector('.selectArea-box');
     sa.bg=sa.querySelector('.selectArea-bg');
     sa.box.info=sa.querySelector('.selectArea-info');
+    sa.box.move=sa.querySelector('.selectArea-move');
     sa.box.pointers=sa.querySelectorAll('.selectArea-pointer');
     sa.box.layout=sa.querySelector('.selectArea-layout');
     sa.selectedArea = sa.box.layout;
@@ -436,7 +439,7 @@ var SelectArea = (function(){
     }(sa)
     window.addEventListener("resize",_window_onresize);
     
-    sa.box.layout.toDraggableCtrl = toDraggable(sa.box.layout,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
+    sa.box.move.toDraggableCtrl = toDraggable(sa.box.move,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.moveBy(gapX,gapY);
       thisC.dispatchEvent((new CustomEvent("change", {})));
       return true;
