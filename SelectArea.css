@@ -127,6 +127,14 @@
 	content: "size: "attr(data-w) "x" attr(data-h) ;
 	white-space: nowrap;;
 }
+.selectArea-info-outer .selectArea-pointer[data-index="0"]::after{
+	top:-1.2em;left:1em;
+	z-index: -1;
+}
+.selectArea-info-outer .selectArea-pointer[data-index="4"]::after{
+	bottom:-1.2em;right:1em;
+	z-index: -1;
+}
 .selectArea-no-info .selectArea-pointer[data-index="0"]::after,
 .selectArea-no-info .selectArea-pointer[data-index="4"]::after{
 	display: none;
