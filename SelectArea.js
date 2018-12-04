@@ -125,6 +125,7 @@ var SelectArea = (function(){
     sa.className="selectArea";
     sa.innerHTML =
     '<div class="selectArea-box">'+
+    '<div  class="selectArea-info"></div>'+
     '<button type="button" class="selectArea-pointer" data-index="0" data-x="0" data-y="0"></button>'+
     '<button type="button" class="selectArea-pointer" data-index="1"></button>'+
     '<button type="button" class="selectArea-pointer" data-index="2"></button>'+
@@ -138,6 +139,7 @@ var SelectArea = (function(){
     '<div class="selectArea-bg"></div>';
     sa.box=sa.querySelector('.selectArea-box');
     sa.bg=sa.querySelector('.selectArea-bg');
+    sa.box.info=sa.querySelector('.selectArea-info');
     sa.box.pointers=sa.querySelectorAll('.selectArea-pointer');
     sa.box.layout=sa.querySelector('.selectArea-layout');
     sa.selectedArea = sa.box.layout;
@@ -293,7 +295,6 @@ var SelectArea = (function(){
     */
     sa.destroy = function(){
       window.removeEventListener("resize",_window_onresize);
-      // window.removeEventListener("scroll",_window_onresize);
       this.parentNode.removeChild(this);
       this.show = null;
       delete this.target.sa;
@@ -434,7 +435,6 @@ var SelectArea = (function(){
       }
     }(sa)
     window.addEventListener("resize",_window_onresize);
-    // window.addEventListener("scroll",_window_onresize);
     
     sa.box.layout.toDraggableCtrl = toDraggable(sa.box.layout,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.moveBy(gapX,gapY);
@@ -579,6 +579,11 @@ var SelectArea = (function(){
     sa.box.pointers[0].setAttribute('data-y',sa.ttop.toFixed(0));
     sa.box.pointers[4].setAttribute('data-w',w.toFixed(0));
     sa.box.pointers[4].setAttribute('data-h',h.toFixed(0));
+    
+    sa.box.info.setAttribute('data-x',sa.tleft.toFixed(0));
+    sa.box.info.setAttribute('data-y',sa.ttop.toFixed(0));
+    sa.box.info.setAttribute('data-w',w.toFixed(0));
+    sa.box.info.setAttribute('data-h',h.toFixed(0));
     
     sa.box.style.left = rleft+"px";
     sa.box.style.top = rtop+"px";
