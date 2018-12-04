@@ -293,7 +293,7 @@ var SelectArea = (function(){
     */
     sa.destroy = function(){
       window.removeEventListener("resize",_window_onresize);
-      window.removeEventListener("scroll",_window_onresize);
+      // window.removeEventListener("scroll",_window_onresize);
       this.parentNode.removeChild(this);
       this.show = null;
       delete this.target.sa;
@@ -434,7 +434,7 @@ var SelectArea = (function(){
       }
     }(sa)
     window.addEventListener("resize",_window_onresize);
-    window.addEventListener("scroll",_window_onresize);
+    // window.addEventListener("scroll",_window_onresize);
     
     sa.box.layout.toDraggableCtrl = toDraggable(sa.box.layout,_toDraggable_onpointerdown,function(thisC){return function(evt,gapX,gapY){
       thisC.moveBy(gapX,gapY);

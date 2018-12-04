@@ -149,10 +149,12 @@
 		sa17.show(50,50,100,100);
 		
 		sa18 = SelectArea(document.querySelector("#test-box18"));
+		
+		sa18.className = sa18.className +' selectArea-info-outer selectArea-pointer-xs';
 		sa18.selectedArea.innerHTML='<div class="contenteditable-div" style="padding: 0;margin: 0;border-width: 0;background-color: transparent;white-space: nowrap;overflow: hidden;" contenteditable="true"><div>text</div><div>text</div></div>';		
 		sa18.show(50,50,250,250);
 		sa19 = SelectArea(document.querySelector("#test-box19"));
-		sa19.className = sa19.className +' selectArea-no-info selectArea-pointer-xs';
+		sa19.className = sa19.className +' selectArea-no-info selectArea-no-bg selectArea-pointer-xs';
 		sa19.selectedArea.innerHTML='<div class="contenteditable-div" style="padding: 0;margin: 0;border-width: 0;background-color: transparent;white-space: nowrap;overflow: hidden;" contenteditable="true"><div>text</div><div>text</div><div>text</div><div>text</div><div>text</div><div>text</div></div>';		
 		sa19.show(50,50,250,250);
 		
