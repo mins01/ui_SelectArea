@@ -142,13 +142,6 @@ var SelectArea = (function(){
     sa.getAppendParent = function(){
       return _p_var.appendParent;
     }
-    sa.setMagnification = function(magnification){
-      _p_var.magnification = parseFloat(magnification);
-      sa.redraw();
-    }
-    sa.getMagnification = function(){
-      return _p_var.magnification;
-    }
     /**
      * 현재 보이고있는가?
      * @return {bool} 현재 보이고있는가?
@@ -249,21 +242,10 @@ var SelectArea = (function(){
       var x = this.tleft;
       var y = this.ttop;
       if(DOMRect){
-        var rect = new DOMRect(x,y,this.w,this.h);
-      }else{
-        
-        var rect = {"x":x,"y":y,"width":this.w,"height":this.h,"left":x,"top":y,"right":x+this.w,"bottom":y+this.h};
+        return new DOMRect(x,y,this.w,this.h);
+      }else{        
+        return {"x":x,"y":y,"width":this.w,"height":this.h,"left":x,"top":y,"right":x+this.w,"bottom":y+this.h};
       }
-      if(_p_var.magnification!=1){
-        for( t in rect){
-          if(typeof rect[t] =='number'){
-            rect[t]*=_p_var.magnification;
-          }
-        }
-      }
-      
-      return rect;
-      
     }
     /**
     * 상대적 좌표이동
@@ -542,8 +524,7 @@ var SelectArea = (function(){
       "autoRedraw":true,
       "show":false,
       "enable":true,
-      "appendParent":document.body,
-      "magnification":1 //배율
+      "appendParent":document.body
     }
     
     var sa = _create(_p_var);
