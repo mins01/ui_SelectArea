@@ -145,7 +145,6 @@ var SelectArea = (function(){
     sa.setMagnification = function(magnification){
       _p_var.magnification = parseFloat(magnification);
       sa.redraw();
-      thisC.dispatchEvent((new CustomEvent("change", {})));
     }
     sa.getMagnification = function(){
       return _p_var.magnification;
