@@ -217,6 +217,9 @@
 				<li>SelectArea.redraw() //현재의 정보로 다시 그린다. (기본적으로 메소드 호출후 자동으로 불린다.)</li>
 				<li>SelectArea.drawFromCoordinateBy(x,y,x1,y1) //시작과 끝좌표의 상대 값으로 다시 그린다.</li>
 				<li>SelectArea.setAppendParent(html_node) //SelectArea가 위치할 부모 node 설정.(기본은 document.body)</li>
+				<li>SelectArea.getAppendParent() //위치할 부모 node 리턴</li>
+				<li>SelectArea.setMagnification(number) //보이는 값에 대한 배율값 (getSelectedAreaRect() 에 영향)</li>
+				<li>SelectArea.getMagnification() //배율값 리턴</li>
 			</ul>
 			CustomEvent
 			<ul>
@@ -277,6 +280,9 @@
 			h:<input name="v_h" type="range" oninput="sa0.moveAndSize(parseFloat(this.form.v_x.value),parseFloat(this.form.v_y.value),parseFloat(this.form.v_w.value),parseFloat(this.form.v_h.value))" value="50"  min="0" max="500"  />/
 			<br />
 			font-size:<input type="number" oninput="sa0.style.fontSize=this.value+'px'" value="10"  min="1" max="50"  />px
+			<br />
+			sa0.getMagnification(number) :
+			number:<input name="" type="number" oninput="sa0.setMagnification(this.value)" value="1" step="0.1" min="0" max="10"  />/
 			<br />
 			<button type="button" onclick="document.querySelector('#test-out0').value=JSON.stringify(sa0.getSelectedAreaRect())">결과 .getSelectedAreaRect()</button><br />
 			<input type="text" id="test-out0" placeholder="결과" style="width:98%" />

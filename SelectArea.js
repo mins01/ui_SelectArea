@@ -139,8 +139,16 @@ var SelectArea = (function(){
     sa.setAppendParent = function(appendParent){
       _p_var.appendParent = appendParent;
     }
-    sa.getAppendParent = function(appendParent){
+    sa.getAppendParent = function(){
       return _p_var.appendParent;
+    }
+    sa.setMagnification = function(magnification){
+      _p_var.magnification = parseFloat(magnification);
+      sa.redraw();
+      thisC.dispatchEvent((new CustomEvent("change", {})));
+    }
+    sa.getMagnification = function(){
+      return _p_var.magnification;
     }
     /**
      * 현재 보이고있는가?
@@ -242,11 +250,20 @@ var SelectArea = (function(){
       var x = this.tleft;
       var y = this.ttop;
       if(DOMRect){
-        return new DOMRect(x,y,this.w,this.h);
+        var rect = new DOMRect(x,y,this.w,this.h);
       }else{
         
-        return {"x":x,"y":y,"width":this.w,"height":this.h,"left":x,"top":y,"right":x+this.w,"bottom":y+this.h};
+        var rect = {"x":x,"y":y,"width":this.w,"height":this.h,"left":x,"top":y,"right":x+this.w,"bottom":y+this.h};
       }
+      if(_p_var.magnification!=1){
+        for( t in rect){
+          if(typeof rect[t] =='number'){
+            rect[t]*=_p_var.magnification;
+          }
+        }
+      }
+      
+      return rect;
       
     }
     /**
@@ -488,18 +505,7 @@ var SelectArea = (function(){
     sa.w = w;
     sa.h = h;
     // console.log("sa.w",sa.w)
-    
-    // console.log(sa.tx)
-    sa.box.pointers[0].setAttribute('data-x',sa.tleft.toFixed(0));
-    sa.box.pointers[0].setAttribute('data-y',sa.ttop.toFixed(0));
-    sa.box.pointers[4].setAttribute('data-w',w.toFixed(0));
-    sa.box.pointers[4].setAttribute('data-h',h.toFixed(0));
-    
-    sa.box.info.setAttribute('data-x',sa.tleft.toFixed(0));
-    sa.box.info.setAttribute('data-y',sa.ttop.toFixed(0));
-    sa.box.info.setAttribute('data-w',w.toFixed(0));
-    sa.box.info.setAttribute('data-h',h.toFixed(0));
-    
+      
     sa.box.style.left = rleft+"px";
     sa.box.style.top = rtop+"px";
     sa.box.style.width = w+"px";
@@ -512,6 +518,17 @@ var SelectArea = (function(){
     sa.bg.style.borderTopWidth = Math.max(0,Math.min(r_bcr.height,rtop))+"px";
     sa.bg.style.borderRightWidth = Math.max(0,Math.min(r_bcr.width,(r_bcr.width-rleft-w)))+"px";
     sa.bg.style.borderBottomWidth =  Math.max(0,Math.min(r_bcr.height,(r_bcr.height-rtop-h)))+"px";
+    
+    var rect = sa.getSelectedAreaRect();
+    sa.box.pointers[0].setAttribute('data-x',rect.left.toFixed(0));
+    sa.box.pointers[0].setAttribute('data-y',rect.top.toFixed(0));
+    sa.box.pointers[4].setAttribute('data-w',rect.width.toFixed(0));
+    sa.box.pointers[4].setAttribute('data-h',rect.height.toFixed(0));
+    
+    sa.box.info.setAttribute('data-x',rect.left.toFixed(0));
+    sa.box.info.setAttribute('data-y',rect.top.toFixed(0));
+    sa.box.info.setAttribute('data-w',rect.width.toFixed(0));
+    sa.box.info.setAttribute('data-h',rect.height.toFixed(0));
   }
   
   return function(target,rangeTarget){
@@ -526,7 +543,8 @@ var SelectArea = (function(){
       "autoRedraw":true,
       "show":false,
       "enable":true,
-      "appendParent":document.body
+      "appendParent":document.body,
+      "magnification":1 //배율
     }
     
     var sa = _create(_p_var);
